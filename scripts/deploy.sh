@@ -9,8 +9,8 @@ cd ..
 
 PROJECT="licenta-diana"
 # Build docker image and push to GCR
-docker build --tag=gcr.io/${PROJECT}/file-service/src .
-docker push gcr.io/${PROJECT}/file-service/src
+docker build --tag=gcr.io/${PROJECT}/file-service .
+docker push gcr.io/${PROJECT}/file-service
 
 # Optional: Remove other old images if automatically if not needed
 # prev_ver=`gcloud container images list-tags gcr.io/${PROJECT}/watermark | grep -v latest | awk '{if(NR>1)print $1}'`
