@@ -1,8 +1,8 @@
 module github.com/bitstored/file-service
 
 require (
-	github.com/bitstored/repository v0.0.0-20190322203258-7411f740d8b1 // indirect
-	github.com/couchbase/gocb v1.6.0 // indirect
+	github.com/bitstored/repository v0.0.0-20190322203258-7411f740d8b1
+	github.com/couchbase/gocb v1.6.0
 	github.com/go-stack/stack v1.8.0 // indirect
 	github.com/golang/protobuf v1.3.1
 	github.com/grpc-ecosystem/go-grpc-middleware v1.0.0 // indirect
