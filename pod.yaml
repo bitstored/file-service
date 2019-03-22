@@ -1,0 +1,40 @@
+apiVersion: "extensions/v1beta1"
+kind: "Deployment"
+metadata:
+  name: "file-service"
+  namespace: "default"
+  labels:
+    app: "file-service"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: "file-service"
+  template:
+    metadata:
+      labels:
+        app: "file-service"
+    spec:
+      containers:
+        - name: "file-service-latest"
+          image: "gcr.io/licenta-diana/file-service:latest"
+---
+apiVersion: "autoscaling/v2beta1"
+kind: "HorizontalPodAutoscaler"
+metadata:
+  name: "file-service-hpa"
+  namespace: "default"
+  labels:
+    app: "file-service"
+spec:
+  scaleTargetRef:
+    kind: "Deployment"
+    name: "file-service"
+    apiVersion: "apps/v1beta1"
+  minReplicas: 1
+  maxReplicas: 5
+  metrics:
+    - type: "Resource"
+      resource:
+        name: "cpu"
+        targetAverageUtilization: 80

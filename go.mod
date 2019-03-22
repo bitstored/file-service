@@ -1,4 +1,4 @@
-module github.com/dianabejan/file-service
+module github.com/bitstored/file-service
 
 require (
 	github.com/go-stack/stack v1.8.0 // indirect
