@@ -1,0 +1,185 @@
+syntax = "proto3";
+import "google/api/annotations.proto";
+
+package fileservice;
+option go_package="server";
+
+message Folder {
+    string parent_identifier = 1;
+    string name = 2;
+    string identifier = 3;
+    string creation_date = 4;
+}
+message FSLevel {
+    Folder folder = 1;
+    repeated Folder folders = 2;
+    repeated File files = 3;
+}
+message FSTree {
+    Folder folder = 1;
+    repeated FSLevel children = 2;
+    repeated File files = 3;
+}
+message File {
+    string parent_identifier = 1;
+    string name = 2;
+    string identifier = 3;
+    string creation_date = 4;
+    bytes content_identifier = 5;
+    enum Type {
+        OTHER = 0;
+        DOC = 1;
+        PDF = 2;
+        TXT = 3;
+        EXCEL = 4;
+        IMAGE = 5;
+    }
+    Type file_type = 6;
+    bool writable = 7;
+    bool private = 8; // should be watermarked 
+}
+message Content {
+    string identifier = 1;
+    bytes data = 2;
+}
+message CreateDriveRequest {
+    string user_id = 1;
+}
+message CreateDriveResponse {
+    int32 response_code = 1;
+    string response_message = 2;
+}
+message UploadFileRequest {
+    File file = 1;
+    Content content = 2;
+    string destination = 3;
+}
+message UploadFileResponse {
+    int32 response_code = 1;
+    string response_message = 2;
+}
+message CreateNewFileRequest {
+    File file = 1;
+}
+message CreateNewFileResponse {
+    int32 response_code = 1;
+    string response_message = 2;
+}
+message DeleteFileRequest {
+    string identifier = 1;
+}
+message DeleteFileResponse {
+    int32 response_code = 1;
+    string response_message = 2;
+}
+message RenameFileRequest {
+    string identifier = 1;
+    string name = 2;
+}
+message RenameFileResponse {
+    int32 response_code = 1;
+    string response_message = 2;
+}
+message MoveFileRequest {
+    string identifier = 1;
+    string destination = 2;
+}
+message MoveFileResponse {
+    int32 response_code = 1;
+    string response_message = 2;
+}
+message GetFolderContentRequest {
+    string identifier = 1;
+  
+}
+message GetFolderContentResponse {
+    int32 response_code = 1;
+    string response_message = 2;
+    FSLevel content = 3;
+}
+message GetFileContentRequest {
+    string identifier = 1;
+}
+message GetFileContentResponse {
+    int32 response_code = 1;
+    string response_message = 2;
+    File file = 3;
+}
+message GetFileTreeRequest {
+    string root_identifier = 1;
+}
+message GetFileTreeResponse {
+    int32 response_code = 1;
+    string response_message = 2;
+    FSTree tree = 3;
+}
+message UpdateFileContentRequest {
+    string identifier = 1;
+    bytes new_content = 2;
+}
+message UpdateFileContentResponse {
+    int32 response_code = 1;
+    string response_message = 2;
+}
+service FileManagement {
+    rpc GetFolderContent(GetFolderContentRequest) returns (GetFolderContentResponse) {
+        option (google.api.http) = {
+            post: "/drive/folder/content"
+            body: "*"
+        };
+    }
+    rpc GetFileContent(GetFileContentRequest) returns (GetFileContentResponse) {
+        option (google.api.http) = {
+            post: "/drive/file/content"
+            body: "*"
+        };
+    }
+    rpc GetFileTree(GetFileTreeRequest) returns (GetFileTreeResponse) {
+        option (google.api.http) = {
+            post: "/drive/tree"
+            body: "*"
+        };
+    }
+    rpc UpdateFileContent(UpdateFileContentRequest) returns (UpdateFileContentResponse) {
+        option (google.api.http) = {
+            post: "/drive/file/update"
+            body: "*"
+        };
+    }
+    rpc CreateDrive(CreateDriveRequest) returns (CreateDriveResponse) {
+        option (google.api.http) = {
+            post: "/drive/init"
+            body: "*"
+        };
+    }
+    rpc CreateNewFile(CreateNewFileRequest) returns (CreateNewFileResponse) {
+        option (google.api.http) = {
+            post: "/drive/file/new"
+            body: "*"
+        };
+    }
+    rpc DeleteFile(DeleteFileRequest) returns (DeleteFileResponse) {
+        option (google.api.http) = {
+            post: "/drive/file/delete"
+            body: "*"
+        };
+    }
+    rpc RenameFile(RenameFileRequest) returns (RenameFileResponse) {
+        option (google.api.http) = {
+            post: "/drive/file/rename"
+            body: "*"
+        };
+    }
+    rpc MoveFile(MoveFileRequest) returns (UploadFileResponse) {
+        option (google.api.http) = {
+            post: "/drive/file/move"
+            body: "*"
+        };
+    }
+    rpc UploadFile(UploadFileRequest) returns (UploadFileResponse) {
+        option (google.api.http) = {
+            post: "/drive/file/upload"
+            body: "*"
+        };
+    } 
+}
