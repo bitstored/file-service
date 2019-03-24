@@ -1,5 +1,4 @@
 syntax = "proto3";
-import "google/api/annotations.proto";
 
 package file_service;
 option go_package="pb";
@@ -25,7 +24,6 @@ message File {
     string name = 2;
     string identifier = 3;
     string creation_date = 4;
-    bytes content_identifier = 5;
     enum Type {
         OTHER = 0;
         DOC = 1;
@@ -37,10 +35,7 @@ message File {
     Type file_type = 6;
     bool writable = 7;
     bool private = 8; // should be watermarked 
-}
-message Content {
-    string identifier = 1;
-    bytes data = 2;
+    bytes content = 9;
 }
 message CreateDriveRequest {
     string user_id = 1;
@@ -51,7 +46,6 @@ message CreateDriveResponse {
 }
 message UploadFileRequest {
     File file = 1;
-    Content content = 2;
     string destination = 3;
 }
 message UploadFileResponse {
@@ -60,8 +54,17 @@ message UploadFileResponse {
 }
 message CreateNewFileRequest {
     File file = 1;
+    string destination = 2;
 }
 message CreateNewFileResponse {
+    int32 response_code = 1;
+    string response_message = 2;
+}
+message CreateNewFolderRequest {
+    File file = 1;
+    string destination = 2;
+}
+message CreateNewFolderResponse {
     int32 response_code = 1;
     string response_message = 2;
 }
@@ -90,7 +93,6 @@ message MoveFileResponse {
 }
 message GetFolderContentRequest {
     string identifier = 1;
-  
 }
 message GetFolderContentResponse {
     int32 response_code = 1;
@@ -122,64 +124,15 @@ message UpdateFileContentResponse {
     string response_message = 2;
 }
 service FileManagement {
-    rpc GetFolderContent(GetFolderContentRequest) returns (GetFolderContentResponse) {
-        option (google.api.http) = {
-            post: "/drive/folder/content"
-            body: "*"
-        };
-    }
-    rpc GetFileContent(GetFileContentRequest) returns (GetFileContentResponse) {
-        option (google.api.http) = {
-            post: "/drive/file/content"
-            body: "*"
-        };
-    }
-    rpc GetFileTree(GetFileTreeRequest) returns (GetFileTreeResponse) {
-        option (google.api.http) = {
-            post: "/drive/tree"
-            body: "*"
-        };
-    }
-    rpc UpdateFileContent(UpdateFileContentRequest) returns (UpdateFileContentResponse) {
-        option (google.api.http) = {
-            post: "/drive/file/update"
-            body: "*"
-        };
-    }
-    rpc CreateDrive(CreateDriveRequest) returns (CreateDriveResponse) {
-        option (google.api.http) = {
-            post: "/drive/init"
-            body: "*"
-        };
-    }
-    rpc CreateNewFile(CreateNewFileRequest) returns (CreateNewFileResponse) {
-        option (google.api.http) = {
-            post: "/drive/file/new"
-            body: "*"
-        };
-    }
-    rpc DeleteFile(DeleteFileRequest) returns (DeleteFileResponse) {
-        option (google.api.http) = {
-            post: "/drive/file/delete"
-            body: "*"
-        };
-    }
-    rpc RenameFile(RenameFileRequest) returns (RenameFileResponse) {
-        option (google.api.http) = {
-            post: "/drive/file/rename"
-            body: "*"
-        };
-    }
-    rpc MoveFile(MoveFileRequest) returns (UploadFileResponse) {
-        option (google.api.http) = {
-            post: "/drive/file/move"
-            body: "*"
-        };
-    }
-    rpc UploadFile(UploadFileRequest) returns (UploadFileResponse) {
-        option (google.api.http) = {
-            post: "/drive/file/upload"
-            body: "*"
-        };
-    } 
+    rpc CreateDrive(CreateDriveRequest) returns (CreateDriveResponse) {}
+    rpc CreateNewFile(CreateNewFileRequest) returns (CreateNewFileResponse) {}
+    rpc CreateNewFolder(CreateNewFolderRequest) returns (CreateNewFolderResponse) {}
+    rpc GetFolderContent(GetFolderContentRequest) returns (GetFolderContentResponse) {}
+    rpc GetFileContent(GetFileContentRequest) returns (GetFileContentResponse) {}
+    rpc GetFileTree(GetFileTreeRequest) returns (GetFileTreeResponse) {}
+    rpc UpdateFileContent(UpdateFileContentRequest) returns (UpdateFileContentResponse) {}
+    rpc DeleteFile(DeleteFileRequest) returns (DeleteFileResponse) {}
+    rpc RenameFile(RenameFileRequest) returns (RenameFileResponse) {}
+    rpc MoveFile(MoveFileRequest) returns (UploadFileResponse) {}
+    rpc UploadFile(UploadFileRequest) returns (UploadFileResponse) {} 
 }
