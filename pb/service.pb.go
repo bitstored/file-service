@@ -7,7 +7,6 @@ import (
 	context "context"
 	fmt "fmt"
 	proto "github.com/golang/protobuf/proto"
-	_ "google.golang.org/genproto/googleapis/api/annotations"
 	grpc "google.golang.org/grpc"
 	math "math"
 )
@@ -239,7 +238,7 @@ type File struct {
 	Identifier           string    `protobuf:"bytes,3,opt,name=identifier,proto3" json:"identifier,omitempty"`
 	CreationDate         string    `protobuf:"bytes,4,opt,name=creation_date,json=creationDate,proto3" json:"creation_date,omitempty"`
 	ContentIdentifier    []byte    `protobuf:"bytes,5,opt,name=content_identifier,json=contentIdentifier,proto3" json:"content_identifier,omitempty"`
-	FileType             File_Type `protobuf:"varint,6,opt,name=file_type,json=fileType,proto3,enum=fileservice.File_Type" json:"file_type,omitempty"`
+	FileType             File_Type `protobuf:"varint,6,opt,name=file_type,json=fileType,proto3,enum=file_service.File_Type" json:"file_type,omitempty"`
 	Writable             bool      `protobuf:"varint,7,opt,name=writable,proto3" json:"writable,omitempty"`
 	Private              bool      `protobuf:"varint,8,opt,name=private,proto3" json:"private,omitempty"`
 	XXX_NoUnkeyedLiteral struct{}  `json:"-"`
@@ -565,6 +564,7 @@ func (m *UploadFileResponse) GetResponseMessage() string {
 
 type CreateNewFileRequest struct {
 	File                 *File    `protobuf:"bytes,1,opt,name=file,proto3" json:"file,omitempty"`
+	Destination          string   `protobuf:"bytes,2,opt,name=destination,proto3" json:"destination,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
 	XXX_sizecache        int32    `json:"-"`
@@ -600,6 +600,13 @@ func (m *CreateNewFileRequest) GetFile() *File {
 		return m.File
 	}
 	return nil
+}
+
+func (m *CreateNewFileRequest) GetDestination() string {
+	if m != nil {
+		return m.Destination
+	}
+	return ""
 }
 
 type CreateNewFileResponse struct {
@@ -649,6 +656,100 @@ func (m *CreateNewFileResponse) GetResponseMessage() string {
 	return ""
 }
 
+type CreateNewFolderRequest struct {
+	File                 *File    `protobuf:"bytes,1,opt,name=file,proto3" json:"file,omitempty"`
+	Destination          string   `protobuf:"bytes,2,opt,name=destination,proto3" json:"destination,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *CreateNewFolderRequest) Reset()         { *m = CreateNewFolderRequest{} }
+func (m *CreateNewFolderRequest) String() string { return proto.CompactTextString(m) }
+func (*CreateNewFolderRequest) ProtoMessage()    {}
+func (*CreateNewFolderRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_a0b84a42fa06f626, []int{11}
+}
+
+func (m *CreateNewFolderRequest) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_CreateNewFolderRequest.Unmarshal(m, b)
+}
+func (m *CreateNewFolderRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_CreateNewFolderRequest.Marshal(b, m, deterministic)
+}
+func (m *CreateNewFolderRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_CreateNewFolderRequest.Merge(m, src)
+}
+func (m *CreateNewFolderRequest) XXX_Size() int {
+	return xxx_messageInfo_CreateNewFolderRequest.Size(m)
+}
+func (m *CreateNewFolderRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_CreateNewFolderRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_CreateNewFolderRequest proto.InternalMessageInfo
+
+func (m *CreateNewFolderRequest) GetFile() *File {
+	if m != nil {
+		return m.File
+	}
+	return nil
+}
+
+func (m *CreateNewFolderRequest) GetDestination() string {
+	if m != nil {
+		return m.Destination
+	}
+	return ""
+}
+
+type CreateNewFolderResponse struct {
+	ResponseCode         int32    `protobuf:"varint,1,opt,name=response_code,json=responseCode,proto3" json:"response_code,omitempty"`
+	ResponseMessage      string   `protobuf:"bytes,2,opt,name=response_message,json=responseMessage,proto3" json:"response_message,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *CreateNewFolderResponse) Reset()         { *m = CreateNewFolderResponse{} }
+func (m *CreateNewFolderResponse) String() string { return proto.CompactTextString(m) }
+func (*CreateNewFolderResponse) ProtoMessage()    {}
+func (*CreateNewFolderResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_a0b84a42fa06f626, []int{12}
+}
+
+func (m *CreateNewFolderResponse) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_CreateNewFolderResponse.Unmarshal(m, b)
+}
+func (m *CreateNewFolderResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_CreateNewFolderResponse.Marshal(b, m, deterministic)
+}
+func (m *CreateNewFolderResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_CreateNewFolderResponse.Merge(m, src)
+}
+func (m *CreateNewFolderResponse) XXX_Size() int {
+	return xxx_messageInfo_CreateNewFolderResponse.Size(m)
+}
+func (m *CreateNewFolderResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_CreateNewFolderResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_CreateNewFolderResponse proto.InternalMessageInfo
+
+func (m *CreateNewFolderResponse) GetResponseCode() int32 {
+	if m != nil {
+		return m.ResponseCode
+	}
+	return 0
+}
+
+func (m *CreateNewFolderResponse) GetResponseMessage() string {
+	if m != nil {
+		return m.ResponseMessage
+	}
+	return ""
+}
+
 type DeleteFileRequest struct {
 	Identifier           string   `protobuf:"bytes,1,opt,name=identifier,proto3" json:"identifier,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
@@ -660,7 +761,7 @@ func (m *DeleteFileRequest) Reset()         { *m = DeleteFileRequest{} }
 func (m *DeleteFileRequest) String() string { return proto.CompactTextString(m) }
 func (*DeleteFileRequest) ProtoMessage()    {}
 func (*DeleteFileRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_a0b84a42fa06f626, []int{11}
+	return fileDescriptor_a0b84a42fa06f626, []int{13}
 }
 
 func (m *DeleteFileRequest) XXX_Unmarshal(b []byte) error {
@@ -700,7 +801,7 @@ func (m *DeleteFileResponse) Reset()         { *m = DeleteFileResponse{} }
 func (m *DeleteFileResponse) String() string { return proto.CompactTextString(m) }
 func (*DeleteFileResponse) ProtoMessage()    {}
 func (*DeleteFileResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_a0b84a42fa06f626, []int{12}
+	return fileDescriptor_a0b84a42fa06f626, []int{14}
 }
 
 func (m *DeleteFileResponse) XXX_Unmarshal(b []byte) error {
@@ -747,7 +848,7 @@ func (m *RenameFileRequest) Reset()         { *m = RenameFileRequest{} }
 func (m *RenameFileRequest) String() string { return proto.CompactTextString(m) }
 func (*RenameFileRequest) ProtoMessage()    {}
 func (*RenameFileRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_a0b84a42fa06f626, []int{13}
+	return fileDescriptor_a0b84a42fa06f626, []int{15}
 }
 
 func (m *RenameFileRequest) XXX_Unmarshal(b []byte) error {
@@ -794,7 +895,7 @@ func (m *RenameFileResponse) Reset()         { *m = RenameFileResponse{} }
 func (m *RenameFileResponse) String() string { return proto.CompactTextString(m) }
 func (*RenameFileResponse) ProtoMessage()    {}
 func (*RenameFileResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_a0b84a42fa06f626, []int{14}
+	return fileDescriptor_a0b84a42fa06f626, []int{16}
 }
 
 func (m *RenameFileResponse) XXX_Unmarshal(b []byte) error {
@@ -841,7 +942,7 @@ func (m *MoveFileRequest) Reset()         { *m = MoveFileRequest{} }
 func (m *MoveFileRequest) String() string { return proto.CompactTextString(m) }
 func (*MoveFileRequest) ProtoMessage()    {}
 func (*MoveFileRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_a0b84a42fa06f626, []int{15}
+	return fileDescriptor_a0b84a42fa06f626, []int{17}
 }
 
 func (m *MoveFileRequest) XXX_Unmarshal(b []byte) error {
@@ -888,7 +989,7 @@ func (m *MoveFileResponse) Reset()         { *m = MoveFileResponse{} }
 func (m *MoveFileResponse) String() string { return proto.CompactTextString(m) }
 func (*MoveFileResponse) ProtoMessage()    {}
 func (*MoveFileResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_a0b84a42fa06f626, []int{16}
+	return fileDescriptor_a0b84a42fa06f626, []int{18}
 }
 
 func (m *MoveFileResponse) XXX_Unmarshal(b []byte) error {
@@ -934,7 +1035,7 @@ func (m *GetFolderContentRequest) Reset()         { *m = GetFolderContentRequest
 func (m *GetFolderContentRequest) String() string { return proto.CompactTextString(m) }
 func (*GetFolderContentRequest) ProtoMessage()    {}
 func (*GetFolderContentRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_a0b84a42fa06f626, []int{17}
+	return fileDescriptor_a0b84a42fa06f626, []int{19}
 }
 
 func (m *GetFolderContentRequest) XXX_Unmarshal(b []byte) error {
@@ -975,7 +1076,7 @@ func (m *GetFolderContentResponse) Reset()         { *m = GetFolderContentRespon
 func (m *GetFolderContentResponse) String() string { return proto.CompactTextString(m) }
 func (*GetFolderContentResponse) ProtoMessage()    {}
 func (*GetFolderContentResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_a0b84a42fa06f626, []int{18}
+	return fileDescriptor_a0b84a42fa06f626, []int{20}
 }
 
 func (m *GetFolderContentResponse) XXX_Unmarshal(b []byte) error {
@@ -1028,7 +1129,7 @@ func (m *GetFileContentRequest) Reset()         { *m = GetFileContentRequest{} }
 func (m *GetFileContentRequest) String() string { return proto.CompactTextString(m) }
 func (*GetFileContentRequest) ProtoMessage()    {}
 func (*GetFileContentRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_a0b84a42fa06f626, []int{19}
+	return fileDescriptor_a0b84a42fa06f626, []int{21}
 }
 
 func (m *GetFileContentRequest) XXX_Unmarshal(b []byte) error {
@@ -1069,7 +1170,7 @@ func (m *GetFileContentResponse) Reset()         { *m = GetFileContentResponse{}
 func (m *GetFileContentResponse) String() string { return proto.CompactTextString(m) }
 func (*GetFileContentResponse) ProtoMessage()    {}
 func (*GetFileContentResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_a0b84a42fa06f626, []int{20}
+	return fileDescriptor_a0b84a42fa06f626, []int{22}
 }
 
 func (m *GetFileContentResponse) XXX_Unmarshal(b []byte) error {
@@ -1122,7 +1223,7 @@ func (m *GetFileTreeRequest) Reset()         { *m = GetFileTreeRequest{} }
 func (m *GetFileTreeRequest) String() string { return proto.CompactTextString(m) }
 func (*GetFileTreeRequest) ProtoMessage()    {}
 func (*GetFileTreeRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_a0b84a42fa06f626, []int{21}
+	return fileDescriptor_a0b84a42fa06f626, []int{23}
 }
 
 func (m *GetFileTreeRequest) XXX_Unmarshal(b []byte) error {
@@ -1163,7 +1264,7 @@ func (m *GetFileTreeResponse) Reset()         { *m = GetFileTreeResponse{} }
 func (m *GetFileTreeResponse) String() string { return proto.CompactTextString(m) }
 func (*GetFileTreeResponse) ProtoMessage()    {}
 func (*GetFileTreeResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_a0b84a42fa06f626, []int{22}
+	return fileDescriptor_a0b84a42fa06f626, []int{24}
 }
 
 func (m *GetFileTreeResponse) XXX_Unmarshal(b []byte) error {
@@ -1217,7 +1318,7 @@ func (m *UpdateFileContentRequest) Reset()         { *m = UpdateFileContentReque
 func (m *UpdateFileContentRequest) String() string { return proto.CompactTextString(m) }
 func (*UpdateFileContentRequest) ProtoMessage()    {}
 func (*UpdateFileContentRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_a0b84a42fa06f626, []int{23}
+	return fileDescriptor_a0b84a42fa06f626, []int{25}
 }
 
 func (m *UpdateFileContentRequest) XXX_Unmarshal(b []byte) error {
@@ -1264,7 +1365,7 @@ func (m *UpdateFileContentResponse) Reset()         { *m = UpdateFileContentResp
 func (m *UpdateFileContentResponse) String() string { return proto.CompactTextString(m) }
 func (*UpdateFileContentResponse) ProtoMessage()    {}
 func (*UpdateFileContentResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_a0b84a42fa06f626, []int{24}
+	return fileDescriptor_a0b84a42fa06f626, []int{26}
 }
 
 func (m *UpdateFileContentResponse) XXX_Unmarshal(b []byte) error {
@@ -1300,105 +1401,102 @@ func (m *UpdateFileContentResponse) GetResponseMessage() string {
 }
 
 func init() {
-	proto.RegisterEnum("fileservice.File_Type", File_Type_name, File_Type_value)
-	proto.RegisterType((*Folder)(nil), "fileservice.Folder")
-	proto.RegisterType((*FSLevel)(nil), "fileservice.FSLevel")
-	proto.RegisterType((*FSTree)(nil), "fileservice.FSTree")
-	proto.RegisterType((*File)(nil), "fileservice.File")
-	proto.RegisterType((*Content)(nil), "fileservice.Content")
-	proto.RegisterType((*CreateDriveRequest)(nil), "fileservice.CreateDriveRequest")
-	proto.RegisterType((*CreateDriveResponse)(nil), "fileservice.CreateDriveResponse")
-	proto.RegisterType((*UploadFileRequest)(nil), "fileservice.UploadFileRequest")
-	proto.RegisterType((*UploadFileResponse)(nil), "fileservice.UploadFileResponse")
-	proto.RegisterType((*CreateNewFileRequest)(nil), "fileservice.CreateNewFileRequest")
-	proto.RegisterType((*CreateNewFileResponse)(nil), "fileservice.CreateNewFileResponse")
-	proto.RegisterType((*DeleteFileRequest)(nil), "fileservice.DeleteFileRequest")
-	proto.RegisterType((*DeleteFileResponse)(nil), "fileservice.DeleteFileResponse")
-	proto.RegisterType((*RenameFileRequest)(nil), "fileservice.RenameFileRequest")
-	proto.RegisterType((*RenameFileResponse)(nil), "fileservice.RenameFileResponse")
-	proto.RegisterType((*MoveFileRequest)(nil), "fileservice.MoveFileRequest")
-	proto.RegisterType((*MoveFileResponse)(nil), "fileservice.MoveFileResponse")
-	proto.RegisterType((*GetFolderContentRequest)(nil), "fileservice.GetFolderContentRequest")
-	proto.RegisterType((*GetFolderContentResponse)(nil), "fileservice.GetFolderContentResponse")
-	proto.RegisterType((*GetFileContentRequest)(nil), "fileservice.GetFileContentRequest")
-	proto.RegisterType((*GetFileContentResponse)(nil), "fileservice.GetFileContentResponse")
-	proto.RegisterType((*GetFileTreeRequest)(nil), "fileservice.GetFileTreeRequest")
-	proto.RegisterType((*GetFileTreeResponse)(nil), "fileservice.GetFileTreeResponse")
-	proto.RegisterType((*UpdateFileContentRequest)(nil), "fileservice.UpdateFileContentRequest")
-	proto.RegisterType((*UpdateFileContentResponse)(nil), "fileservice.UpdateFileContentResponse")
+	proto.RegisterEnum("file_service.File_Type", File_Type_name, File_Type_value)
+	proto.RegisterType((*Folder)(nil), "file_service.Folder")
+	proto.RegisterType((*FSLevel)(nil), "file_service.FSLevel")
+	proto.RegisterType((*FSTree)(nil), "file_service.FSTree")
+	proto.RegisterType((*File)(nil), "file_service.File")
+	proto.RegisterType((*Content)(nil), "file_service.Content")
+	proto.RegisterType((*CreateDriveRequest)(nil), "file_service.CreateDriveRequest")
+	proto.RegisterType((*CreateDriveResponse)(nil), "file_service.CreateDriveResponse")
+	proto.RegisterType((*UploadFileRequest)(nil), "file_service.UploadFileRequest")
+	proto.RegisterType((*UploadFileResponse)(nil), "file_service.UploadFileResponse")
+	proto.RegisterType((*CreateNewFileRequest)(nil), "file_service.CreateNewFileRequest")
+	proto.RegisterType((*CreateNewFileResponse)(nil), "file_service.CreateNewFileResponse")
+	proto.RegisterType((*CreateNewFolderRequest)(nil), "file_service.CreateNewFolderRequest")
+	proto.RegisterType((*CreateNewFolderResponse)(nil), "file_service.CreateNewFolderResponse")
+	proto.RegisterType((*DeleteFileRequest)(nil), "file_service.DeleteFileRequest")
+	proto.RegisterType((*DeleteFileResponse)(nil), "file_service.DeleteFileResponse")
+	proto.RegisterType((*RenameFileRequest)(nil), "file_service.RenameFileRequest")
+	proto.RegisterType((*RenameFileResponse)(nil), "file_service.RenameFileResponse")
+	proto.RegisterType((*MoveFileRequest)(nil), "file_service.MoveFileRequest")
+	proto.RegisterType((*MoveFileResponse)(nil), "file_service.MoveFileResponse")
+	proto.RegisterType((*GetFolderContentRequest)(nil), "file_service.GetFolderContentRequest")
+	proto.RegisterType((*GetFolderContentResponse)(nil), "file_service.GetFolderContentResponse")
+	proto.RegisterType((*GetFileContentRequest)(nil), "file_service.GetFileContentRequest")
+	proto.RegisterType((*GetFileContentResponse)(nil), "file_service.GetFileContentResponse")
+	proto.RegisterType((*GetFileTreeRequest)(nil), "file_service.GetFileTreeRequest")
+	proto.RegisterType((*GetFileTreeResponse)(nil), "file_service.GetFileTreeResponse")
+	proto.RegisterType((*UpdateFileContentRequest)(nil), "file_service.UpdateFileContentRequest")
+	proto.RegisterType((*UpdateFileContentResponse)(nil), "file_service.UpdateFileContentResponse")
 }
 
 func init() { proto.RegisterFile("service.proto", fileDescriptor_a0b84a42fa06f626) }
 
 var fileDescriptor_a0b84a42fa06f626 = []byte{
-	// 1066 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xcc, 0x57, 0xcb, 0x6e, 0xdb, 0x46,
-	0x14, 0x2d, 0xf5, 0xf6, 0x95, 0x6c, 0x53, 0xe3, 0x17, 0xcb, 0xa6, 0xb6, 0x3a, 0x69, 0x6a, 0x37,
-	0x81, 0xa5, 0xc2, 0x5e, 0x14, 0x0d, 0xe0, 0x45, 0x23, 0xd9, 0xae, 0x81, 0xb8, 0x29, 0x68, 0x05,
-	0x08, 0xda, 0x85, 0x40, 0x8b, 0xd7, 0x0a, 0x51, 0x9a, 0x64, 0x49, 0x5a, 0x82, 0x97, 0xe9, 0xba,
-	0x2f, 0xa0, 0xbb, 0xfe, 0x56, 0x7f, 0xa1, 0xab, 0x7e, 0x45, 0x31, 0xc3, 0xa1, 0xc5, 0x87, 0x64,
-	0x47, 0x0b, 0x02, 0xdd, 0x0d, 0x67, 0xce, 0xcc, 0x39, 0xe7, 0xce, 0xd5, 0xdc, 0x2b, 0x58, 0xf6,
-	0xd1, 0x1b, 0x9b, 0x43, 0x6c, 0xbb, 0x9e, 0x13, 0x38, 0xa4, 0x7e, 0x65, 0x5a, 0x28, 0xa6, 0xd4,
-	0x47, 0x23, 0xc7, 0x19, 0x59, 0xd8, 0xd1, 0x5d, 0xb3, 0xa3, 0xdb, 0xb6, 0x13, 0xe8, 0x81, 0xe9,
-	0xd8, 0x7e, 0x08, 0xa5, 0xbf, 0x49, 0x50, 0x39, 0x71, 0x2c, 0x03, 0x3d, 0xf2, 0x0c, 0x9a, 0xae,
-	0xee, 0xa1, 0x1d, 0x0c, 0x4c, 0x03, 0xed, 0xc0, 0xbc, 0x32, 0xd1, 0x53, 0xa4, 0x96, 0xb4, 0xb7,
-	0xa4, 0xc9, 0xe1, 0xc2, 0xd9, 0xdd, 0x3c, 0x21, 0x50, 0xb2, 0xf5, 0x6b, 0x54, 0x0a, 0x7c, 0x9d,
-	0x8f, 0xc9, 0x36, 0x40, 0x6c, 0x67, 0x91, 0xaf, 0xc4, 0x66, 0xc8, 0x63, 0x58, 0x1e, 0x7a, 0xc8,
-	0xe9, 0x07, 0x86, 0x1e, 0xa0, 0x52, 0xe2, 0x90, 0x46, 0x34, 0xd9, 0xd3, 0x03, 0x64, 0x82, 0xaa,
-	0x27, 0x17, 0x2f, 0x71, 0x8c, 0x16, 0x79, 0x06, 0x95, 0x2b, 0xae, 0x8d, 0xcb, 0xa8, 0x1f, 0xac,
-	0xb5, 0x63, 0xc6, 0xda, 0xa1, 0x6c, 0x4d, 0x40, 0xc8, 0x3e, 0x54, 0xc3, 0x91, 0xaf, 0x14, 0x5a,
-	0xc5, 0x79, 0xe8, 0x08, 0x43, 0x76, 0xa1, 0xcc, 0x97, 0x95, 0x22, 0x07, 0x37, 0x93, 0x60, 0xd3,
-	0x42, 0x2d, 0x5c, 0xa7, 0x7f, 0xb0, 0x08, 0x5d, 0xf4, 0x3d, 0xc4, 0xc5, 0xf4, 0x7c, 0x01, 0xb5,
-	0xe1, 0x5b, 0xd3, 0x32, 0x3c, 0xb4, 0x85, 0xa0, 0xf5, 0x24, 0x3c, 0x34, 0xa9, 0xdd, 0xa1, 0xde,
-	0x5f, 0xd2, 0xbf, 0x05, 0x28, 0xb1, 0xef, 0xff, 0xc7, 0x95, 0x91, 0x7d, 0x20, 0x43, 0xc7, 0x0e,
-	0x52, 0x32, 0xca, 0x2d, 0x69, 0xaf, 0xa1, 0x35, 0xc5, 0x4a, 0x4c, 0xc7, 0x21, 0x2c, 0x31, 0x1b,
-	0x83, 0xe0, 0xd6, 0x45, 0xa5, 0xd2, 0x92, 0xf6, 0x56, 0x0e, 0x36, 0x33, 0x56, 0xdb, 0xfd, 0x5b,
-	0x17, 0xb5, 0x1a, 0x9b, 0x66, 0x23, 0xa2, 0x42, 0x6d, 0xe2, 0x99, 0x81, 0x7e, 0x69, 0xa1, 0x52,
-	0x6d, 0x49, 0x7b, 0x35, 0xed, 0xee, 0x9b, 0x28, 0x50, 0x75, 0x3d, 0x73, 0xcc, 0xe4, 0xd5, 0xf8,
-	0x52, 0xf4, 0x49, 0x5f, 0x40, 0x89, 0xef, 0x5e, 0x82, 0xf2, 0xab, 0xfe, 0x37, 0xc7, 0x9a, 0xfc,
-	0x01, 0xa9, 0x42, 0xb1, 0xf7, 0xaa, 0x2b, 0x4b, 0x6c, 0xf0, 0x5d, 0xef, 0x44, 0x2e, 0xb0, 0x41,
-	0xff, 0x4d, 0x5f, 0x2e, 0x32, 0xd4, 0xf1, 0x9b, 0xee, 0xf1, 0x4b, 0xb9, 0xc4, 0x86, 0x67, 0xe7,
-	0x5f, 0x9f, 0x1e, 0xcb, 0x65, 0x7a, 0x04, 0xd5, 0x6e, 0xe8, 0x21, 0x15, 0x2d, 0x29, 0x13, 0x2d,
-	0x02, 0x25, 0x43, 0x0f, 0x74, 0x1e, 0xe1, 0x86, 0xc6, 0xc7, 0x74, 0x1f, 0x48, 0x97, 0x05, 0x0b,
-	0x7b, 0x9e, 0x39, 0x46, 0x0d, 0x7f, 0xba, 0x41, 0x3f, 0x20, 0x5b, 0x50, 0xbd, 0xf1, 0xd1, 0x1b,
-	0x98, 0x86, 0x38, 0xa6, 0xc2, 0x3e, 0xcf, 0x0c, 0x8a, 0xb0, 0x96, 0x80, 0xfb, 0xae, 0x63, 0xfb,
-	0xc8, 0xee, 0xc1, 0x13, 0xe3, 0xc1, 0xd0, 0x31, 0x90, 0xef, 0x2a, 0x6b, 0x8d, 0x68, 0xb2, 0xeb,
-	0x18, 0x48, 0x3e, 0x07, 0xf9, 0x0e, 0x74, 0x8d, 0xbe, 0xaf, 0x8f, 0xa2, 0xcb, 0x5e, 0x8d, 0xe6,
-	0xcf, 0xc3, 0x69, 0xfa, 0x8b, 0x04, 0xcd, 0xd7, 0xae, 0xe5, 0xe8, 0x06, 0xcf, 0x2b, 0xa1, 0xea,
-	0x09, 0x94, 0x58, 0xc0, 0x45, 0x76, 0xcf, 0xc8, 0x3f, 0xbe, 0x4c, 0xda, 0x50, 0x15, 0xb7, 0xca,
-	0x8f, 0x4f, 0x27, 0xb6, 0x88, 0x96, 0x16, 0x81, 0x48, 0x0b, 0xea, 0x06, 0xfa, 0x81, 0x69, 0xf3,
-	0x94, 0x11, 0x59, 0x16, 0x9f, 0xa2, 0x06, 0x90, 0xb8, 0x9a, 0x9c, 0x4c, 0x1f, 0xc1, 0x7a, 0x18,
-	0xdb, 0x6f, 0x71, 0xb2, 0xb8, 0x6d, 0x3a, 0x82, 0x8d, 0xd4, 0xf6, 0x9c, 0x74, 0x1e, 0x42, 0xb3,
-	0x87, 0x16, 0x06, 0x18, 0x17, 0xf9, 0x40, 0xee, 0xb1, 0x10, 0xc6, 0x37, 0xe5, 0x24, 0xed, 0x14,
-	0x9a, 0x1a, 0xb2, 0x97, 0x63, 0x01, 0x69, 0xb3, 0x1e, 0x1e, 0x26, 0x37, 0x7e, 0x50, 0x4e, 0x72,
-	0x2f, 0x60, 0xf5, 0xdc, 0x19, 0x2f, 0x24, 0x36, 0x95, 0xac, 0x85, 0x6c, 0xb2, 0x5e, 0x82, 0x3c,
-	0x3d, 0x34, 0x27, 0xe1, 0x5f, 0xc1, 0xd6, 0x29, 0x06, 0x61, 0x45, 0x89, 0x7e, 0x4f, 0xef, 0x99,
-	0x08, 0x7f, 0x49, 0xa0, 0x64, 0xf7, 0xe6, 0xa3, 0x33, 0xfe, 0x14, 0x14, 0x67, 0x3c, 0x05, 0x51,
-	0x8d, 0x8b, 0x40, 0xf4, 0x4b, 0xd8, 0x60, 0xda, 0x4c, 0x0b, 0x17, 0x74, 0xf5, 0xbb, 0x04, 0x9b,
-	0xe9, 0x9d, 0x39, 0x79, 0x8a, 0x9e, 0x83, 0xe2, 0xfd, 0xcf, 0xc1, 0x11, 0x10, 0x21, 0x88, 0xf5,
-	0x06, 0x91, 0x8f, 0x5d, 0x58, 0xf5, 0x1c, 0x67, 0x46, 0x3d, 0x5e, 0x61, 0xd3, 0xd3, 0x2a, 0xc8,
-	0xfa, 0x9c, 0xb5, 0xc4, 0xfe, 0x9c, 0xdc, 0xec, 0x42, 0x29, 0xf0, 0x30, 0x72, 0x93, 0xea, 0x58,
-	0x78, 0x5b, 0xa3, 0x71, 0x00, 0xfd, 0x01, 0x94, 0xd7, 0x2e, 0xab, 0xf1, 0x8b, 0xdf, 0x0e, 0xd9,
-	0x81, 0xba, 0x8d, 0x93, 0x41, 0xbc, 0x2a, 0x34, 0x34, 0xb0, 0x71, 0x22, 0xce, 0xa1, 0x3f, 0xc2,
-	0x87, 0x33, 0x0e, 0xcf, 0xc7, 0xf2, 0xc1, 0xaf, 0x4b, 0xb0, 0xc2, 0x78, 0xce, 0x75, 0x5b, 0x1f,
-	0xe1, 0x35, 0x2b, 0x41, 0xef, 0x24, 0x90, 0xd3, 0x3f, 0x0a, 0xf2, 0x69, 0x22, 0x18, 0x73, 0x7e,
-	0x6f, 0xea, 0x93, 0x07, 0x50, 0x21, 0x37, 0x6d, 0xfd, 0xfc, 0xf7, 0x3f, 0x7f, 0x16, 0x54, 0xba,
-	0xd1, 0x31, 0x58, 0xe5, 0xee, 0x84, 0x5d, 0x60, 0x47, 0x84, 0xe4, 0xb9, 0xf4, 0x94, 0xdc, 0xc2,
-	0x4a, 0x32, 0x83, 0x09, 0xcd, 0x1c, 0x9d, 0x09, 0xbd, 0xfa, 0xf8, 0x5e, 0x8c, 0x20, 0xdf, 0xe6,
-	0xe4, 0x0a, 0x5d, 0x8b, 0xc8, 0x4d, 0x0b, 0xe3, 0xd4, 0x6f, 0xa1, 0x1e, 0xcb, 0x35, 0xb2, 0x33,
-	0xeb, 0xcc, 0x58, 0x16, 0xab, 0xad, 0xf9, 0x00, 0xc1, 0xb8, 0xc9, 0x19, 0x65, 0x5a, 0x17, 0x8c,
-	0x2c, 0x85, 0x18, 0xd3, 0x3b, 0xde, 0x58, 0xa4, 0x6e, 0x9a, 0x24, 0x63, 0x38, 0x2f, 0xcd, 0xd4,
-	0xcf, 0x1e, 0x82, 0x09, 0xf2, 0x8f, 0x39, 0xf9, 0x16, 0x25, 0x71, 0xbb, 0x37, 0x1c, 0x2e, 0xdc,
-	0xc6, 0x7a, 0xa8, 0x94, 0xdb, 0x6c, 0x33, 0x96, 0x72, 0x3b, 0xa3, 0xfd, 0xca, 0xb8, 0x35, 0x6d,
-	0x93, 0xc7, 0xd5, 0x83, 0xe5, 0x44, 0x4b, 0x40, 0x3e, 0x99, 0x71, 0x54, 0xb2, 0xdb, 0x50, 0xe9,
-	0x7d, 0x10, 0xc1, 0xa7, 0x72, 0xbe, 0x75, 0xba, 0x1a, 0x37, 0x68, 0xe3, 0x84, 0x71, 0x5a, 0x00,
-	0xd3, 0x42, 0x4f, 0xb6, 0x13, 0xa7, 0x65, 0xda, 0x06, 0x75, 0x67, 0xee, 0xfa, 0x7d, 0xb1, 0x34,
-	0x38, 0x4e, 0xb0, 0x4d, 0xeb, 0x74, 0x8a, 0x2d, 0xd3, 0x09, 0xa4, 0xd8, 0xb2, 0x05, 0x7e, 0x36,
-	0x9b, 0xc7, 0x71, 0x8c, 0xed, 0x0a, 0x6a, 0x51, 0x69, 0x25, 0x8f, 0x12, 0x67, 0xa5, 0xca, 0x78,
-	0x8a, 0x29, 0xdb, 0x3c, 0xd2, 0x8f, 0x38, 0xd3, 0x06, 0x95, 0xe3, 0x4c, 0xd7, 0xce, 0x38, 0x72,
-	0x35, 0xdd, 0x92, 0x72, 0x95, 0x69, 0x8b, 0x1f, 0xe6, 0x9a, 0x93, 0x8f, 0x0c, 0xf7, 0x5c, 0x7a,
-	0xfa, 0xa2, 0xf4, 0x7d, 0xc1, 0xbd, 0xbc, 0xac, 0xf0, 0x3f, 0xdc, 0x87, 0xff, 0x05, 0x00, 0x00,
-	0xff, 0xff, 0xf7, 0x30, 0x5d, 0x13, 0xac, 0x0f, 0x00, 0x00,
+	// 989 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xcc, 0x57, 0xdb, 0x6e, 0xdb, 0x46,
+	0x10, 0x35, 0x75, 0xa3, 0x3c, 0x92, 0x6d, 0x6a, 0x12, 0xc7, 0xac, 0x80, 0x36, 0x2a, 0x9d, 0x26,
+	0x2a, 0xda, 0xa8, 0xa8, 0x53, 0xa0, 0xe8, 0x43, 0x1e, 0x1a, 0xc9, 0x76, 0x0d, 0x44, 0x4d, 0x4b,
+	0x2b, 0x40, 0x90, 0xa2, 0x50, 0x28, 0x71, 0xec, 0x12, 0xa5, 0x49, 0x96, 0x64, 0x64, 0xe4, 0x27,
+	0x7a, 0x41, 0x1f, 0xfb, 0x89, 0x05, 0xfa, 0x0d, 0xc5, 0x2e, 0x2f, 0xa2, 0x96, 0x92, 0x15, 0x15,
+	0x25, 0x90, 0xb7, 0xe5, 0xec, 0x99, 0xd9, 0x73, 0x76, 0x67, 0x77, 0x86, 0xb0, 0x13, 0x90, 0x3f,
+	0xb3, 0xa6, 0xd4, 0xf3, 0x7c, 0x37, 0x74, 0xb1, 0x79, 0x61, 0xd9, 0x34, 0x8e, 0x6d, 0xda, 0xaf,
+	0x12, 0xd4, 0x4e, 0x5c, 0xdb, 0x24, 0x1f, 0x3f, 0x81, 0x96, 0x67, 0xf8, 0xe4, 0x84, 0x63, 0xcb,
+	0x24, 0x27, 0xb4, 0x2e, 0x2c, 0xf2, 0x55, 0xa9, 0x23, 0x75, 0xb7, 0x75, 0x25, 0x9a, 0x38, 0x4b,
+	0xed, 0x88, 0x50, 0x71, 0x8c, 0x2b, 0x52, 0x4b, 0x7c, 0x9e, 0x8f, 0xf1, 0x03, 0x80, 0x8c, 0x67,
+	0x99, 0xcf, 0x64, 0x2c, 0x78, 0x08, 0x3b, 0x53, 0x9f, 0x8c, 0xd0, 0x72, 0x9d, 0xb1, 0x69, 0x84,
+	0xa4, 0x56, 0x38, 0xa4, 0x99, 0x18, 0x07, 0x46, 0x48, 0xda, 0x1f, 0x12, 0xc8, 0x27, 0xe7, 0x4f,
+	0x69, 0x46, 0x36, 0x7e, 0x0a, 0xb5, 0x0b, 0xce, 0x8d, 0xd3, 0x68, 0x1c, 0xdd, 0xee, 0x65, 0xb9,
+	0xf7, 0x22, 0xde, 0x7a, 0x8c, 0xc1, 0x1e, 0xc8, 0xd1, 0x28, 0x50, 0x4b, 0x9d, 0xf2, 0x4a, 0x78,
+	0x02, 0xc2, 0x2e, 0x54, 0xd9, 0x7c, 0xa0, 0x96, 0x39, 0x1a, 0x05, 0xb4, 0x65, 0x93, 0x1e, 0x01,
+	0xb4, 0x3f, 0xd9, 0x26, 0x9d, 0x8f, 0x7c, 0xa2, 0x0d, 0x29, 0x7d, 0x0e, 0xf5, 0xe9, 0x4f, 0x96,
+	0x6d, 0xfa, 0xe4, 0xc4, 0x9c, 0xf6, 0x05, 0x7c, 0xa4, 0x54, 0x4f, 0x61, 0x1b, 0xb0, 0xfa, 0xbb,
+	0x04, 0x15, 0xf6, 0xfd, 0x6e, 0x1c, 0x1c, 0x3e, 0x04, 0x9c, 0xba, 0x4e, 0x28, 0xd0, 0xa8, 0x76,
+	0xa4, 0x6e, 0x53, 0x6f, 0xc5, 0x33, 0x19, 0x1e, 0x5f, 0xc0, 0x36, 0x57, 0x16, 0xbe, 0xf1, 0x48,
+	0xad, 0x75, 0xa4, 0xee, 0xee, 0xd1, 0x41, 0x5e, 0x6b, 0x6f, 0xf4, 0xc6, 0x23, 0xbd, 0xce, 0xec,
+	0x6c, 0x84, 0x6d, 0xa8, 0x5f, 0xfb, 0x56, 0x68, 0x4c, 0x6c, 0x52, 0xe5, 0x8e, 0xd4, 0xad, 0xeb,
+	0xe9, 0x37, 0xaa, 0x20, 0x7b, 0xbe, 0x35, 0x63, 0xfc, 0xea, 0x7c, 0x2a, 0xf9, 0xd4, 0x9e, 0x40,
+	0x85, 0x7b, 0x6f, 0x43, 0xf5, 0xd9, 0xe8, 0x9b, 0x63, 0x5d, 0xd9, 0x42, 0x19, 0xca, 0x83, 0x67,
+	0x7d, 0x45, 0x62, 0x83, 0xef, 0x06, 0x27, 0x4a, 0x89, 0x0d, 0x46, 0x2f, 0x46, 0x4a, 0x99, 0xa1,
+	0x8e, 0x5f, 0xf4, 0x8f, 0x9f, 0x2a, 0x15, 0x36, 0x3c, 0x1b, 0x7e, 0x7d, 0x7a, 0xac, 0x54, 0xb5,
+	0xc7, 0x20, 0xf7, 0x23, 0x11, 0xc2, 0x76, 0x49, 0xb9, 0xed, 0x42, 0xa8, 0x98, 0x46, 0x68, 0xf0,
+	0x2d, 0x6e, 0xea, 0x7c, 0xac, 0x3d, 0x04, 0xec, 0xb3, 0xdd, 0xa2, 0x81, 0x6f, 0xcd, 0x48, 0xa7,
+	0x5f, 0x5e, 0x53, 0x10, 0xe2, 0x01, 0xc8, 0xaf, 0x03, 0xf2, 0xc7, 0x96, 0x19, 0x87, 0xa9, 0xb1,
+	0xcf, 0x33, 0x53, 0x23, 0xb8, 0xb5, 0x00, 0x0f, 0x3c, 0xd7, 0x09, 0x88, 0x1d, 0x84, 0x1f, 0x8f,
+	0xc7, 0x53, 0xd7, 0x24, 0xee, 0x55, 0xd5, 0x9b, 0x89, 0xb1, 0xef, 0x9a, 0x84, 0x1f, 0x83, 0x92,
+	0x82, 0xae, 0x28, 0x08, 0x8c, 0xcb, 0xe4, 0xb4, 0xf7, 0x12, 0xfb, 0x30, 0x32, 0xb3, 0xdb, 0xdf,
+	0x7a, 0xee, 0xd9, 0xae, 0x61, 0xf2, 0xc4, 0x8a, 0x59, 0xdd, 0x87, 0x0a, 0xdb, 0xf0, 0x38, 0xc3,
+	0x97, 0x65, 0x20, 0x9f, 0xc7, 0xcf, 0x40, 0x8e, 0xcf, 0x95, 0xc7, 0xcf, 0x25, 0x77, 0xbc, 0x5f,
+	0x7a, 0x82, 0xc2, 0x0e, 0x34, 0x4c, 0x0a, 0x42, 0xcb, 0xe1, 0x59, 0x13, 0x27, 0x5a, 0xd6, 0xa4,
+	0x99, 0x80, 0x59, 0x3e, 0x05, 0xc9, 0x7e, 0x05, 0xb7, 0xa3, 0xdd, 0xfd, 0x96, 0xae, 0xff, 0x8b,
+	0x70, 0x41, 0x47, 0x29, 0xaf, 0xe3, 0x12, 0xf6, 0x85, 0x15, 0x0a, 0x92, 0x32, 0x81, 0x3b, 0xf3,
+	0x85, 0xa2, 0xc7, 0xe7, 0x7f, 0x17, 0x63, 0xc1, 0x41, 0x6e, 0x8d, 0x82, 0xe4, 0x3c, 0x82, 0xd6,
+	0x80, 0x6c, 0x0a, 0x29, 0x7b, 0x2c, 0x6b, 0xee, 0x1b, 0x4b, 0x9a, 0xac, 0x53, 0x41, 0xd4, 0x4e,
+	0xa1, 0xa5, 0x13, 0x7b, 0x2e, 0x37, 0xa0, 0xb6, 0xec, 0xb5, 0x65, 0x74, 0xb3, 0x81, 0x0a, 0xa2,
+	0x7b, 0x0e, 0x7b, 0x43, 0x77, 0xb6, 0x11, 0xd9, 0xf5, 0x99, 0x30, 0x01, 0x65, 0x1e, 0xb4, 0x20,
+	0xe2, 0x5f, 0xc1, 0xc1, 0x29, 0x85, 0x51, 0x9e, 0x25, 0x2f, 0xc8, 0x5b, 0x26, 0xc2, 0x5f, 0x12,
+	0xa8, 0x79, 0xdf, 0x62, 0x78, 0x66, 0x5f, 0xbf, 0xf2, 0xb2, 0xd7, 0x2f, 0x29, 0xed, 0x09, 0x4a,
+	0xfb, 0x12, 0xf6, 0x19, 0x39, 0xcb, 0xa6, 0x0d, 0x65, 0xfd, 0x2e, 0xc1, 0x1d, 0xd1, 0xb3, 0x20,
+	0x51, 0xc9, 0xa3, 0x51, 0xbe, 0xf9, 0xd1, 0xd0, 0x1e, 0x03, 0xc6, 0x8c, 0x58, 0x57, 0x94, 0x08,
+	0x79, 0x00, 0x7b, 0xbe, 0xeb, 0x2e, 0x69, 0x43, 0x76, 0x99, 0x79, 0x5e, 0xfc, 0xb5, 0xdf, 0x24,
+	0xb8, 0xb5, 0xe0, 0x5f, 0x90, 0x9c, 0x2e, 0x54, 0x42, 0x9f, 0x12, 0x39, 0x62, 0xaf, 0xc6, 0x3b,
+	0x3a, 0x9d, 0x23, 0xb4, 0x1f, 0x40, 0x7d, 0xee, 0xb1, 0xde, 0x66, 0xf3, 0xf3, 0xc1, 0xbb, 0xd0,
+	0x70, 0xe8, 0x7a, 0x9c, 0xad, 0x85, 0x4d, 0x1d, 0x1c, 0xba, 0x8e, 0xe3, 0x68, 0x3f, 0xc3, 0x7b,
+	0x4b, 0x82, 0x17, 0xa3, 0xf9, 0xe8, 0x1f, 0x19, 0x76, 0xd9, 0x3a, 0x43, 0xc3, 0x31, 0x2e, 0xe9,
+	0x8a, 0xd5, 0xdd, 0x11, 0x34, 0x32, 0xdd, 0x04, 0x76, 0x84, 0x32, 0x9d, 0xeb, 0x4b, 0xda, 0x1f,
+	0xde, 0x80, 0x88, 0x56, 0xd3, 0xb6, 0xf0, 0x25, 0xec, 0x2c, 0xd4, 0x38, 0xd4, 0x96, 0x79, 0x2d,
+	0x96, 0xd8, 0xf6, 0xe1, 0x8d, 0x98, 0x34, 0xf6, 0x2b, 0xd8, 0x13, 0x4a, 0x0e, 0xde, 0x5b, 0xe5,
+	0x99, 0xad, 0x7a, 0xed, 0x8f, 0xd6, 0xa0, 0xd2, 0x15, 0xa6, 0xa0, 0x88, 0x4f, 0x05, 0x0a, 0xce,
+	0x2b, 0x9e, 0xa1, 0xf6, 0xfd, 0x75, 0xb0, 0x74, 0x91, 0x1f, 0x61, 0x77, 0xf1, 0xe2, 0xe2, 0x61,
+	0xde, 0x37, 0x97, 0x70, 0xed, 0x7b, 0x37, 0x83, 0xd2, 0xf0, 0x23, 0x68, 0x64, 0x6e, 0x91, 0x78,
+	0xae, 0xf9, 0x0b, 0x2a, 0x9e, 0xeb, 0x92, 0x2b, 0xa8, 0x6d, 0xe1, 0x05, 0xeb, 0x09, 0x85, 0x6c,
+	0x45, 0x41, 0xf3, 0xaa, 0xbb, 0xd2, 0x7e, 0xb0, 0x16, 0x97, 0xae, 0xf3, 0x3d, 0xc0, 0xbc, 0x6c,
+	0xe3, 0xdd, 0x45, 0xc7, 0x5c, 0x17, 0xd0, 0xee, 0xac, 0x06, 0x64, 0x43, 0xce, 0x4b, 0xab, 0x18,
+	0x32, 0x57, 0xbd, 0xc5, 0x90, 0xf9, 0xaa, 0xac, 0x6d, 0xe1, 0x10, 0xea, 0x49, 0xc9, 0xc3, 0xf7,
+	0x17, 0xf1, 0x42, 0x7d, 0x15, 0xc3, 0xe5, 0x1b, 0xd9, 0x88, 0xe1, 0xdc, 0x2e, 0x32, 0xcc, 0xb5,
+	0xe2, 0x6f, 0x13, 0xf2, 0x49, 0xe5, 0x65, 0xc9, 0x9b, 0x4c, 0x6a, 0xfc, 0xef, 0xfe, 0xd1, 0xbf,
+	0x01, 0x00, 0x00, 0xff, 0xff, 0x85, 0x38, 0x4f, 0x8e, 0xee, 0x0f, 0x00, 0x00,
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -1413,12 +1511,13 @@ const _ = grpc.SupportPackageIsVersion4
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
 type FileManagementClient interface {
+	CreateDrive(ctx context.Context, in *CreateDriveRequest, opts ...grpc.CallOption) (*CreateDriveResponse, error)
+	CreateNewFile(ctx context.Context, in *CreateNewFileRequest, opts ...grpc.CallOption) (*CreateNewFileResponse, error)
+	CreateNewFolder(ctx context.Context, in *CreateNewFolderRequest, opts ...grpc.CallOption) (*CreateNewFolderResponse, error)
 	GetFolderContent(ctx context.Context, in *GetFolderContentRequest, opts ...grpc.CallOption) (*GetFolderContentResponse, error)
 	GetFileContent(ctx context.Context, in *GetFileContentRequest, opts ...grpc.CallOption) (*GetFileContentResponse, error)
 	GetFileTree(ctx context.Context, in *GetFileTreeRequest, opts ...grpc.CallOption) (*GetFileTreeResponse, error)
 	UpdateFileContent(ctx context.Context, in *UpdateFileContentRequest, opts ...grpc.CallOption) (*UpdateFileContentResponse, error)
-	CreateDrive(ctx context.Context, in *CreateDriveRequest, opts ...grpc.CallOption) (*CreateDriveResponse, error)
-	CreateNewFile(ctx context.Context, in *CreateNewFileRequest, opts ...grpc.CallOption) (*CreateNewFileResponse, error)
 	DeleteFile(ctx context.Context, in *DeleteFileRequest, opts ...grpc.CallOption) (*DeleteFileResponse, error)
 	RenameFile(ctx context.Context, in *RenameFileRequest, opts ...grpc.CallOption) (*RenameFileResponse, error)
 	MoveFile(ctx context.Context, in *MoveFileRequest, opts ...grpc.CallOption) (*UploadFileResponse, error)
@@ -1433,45 +1532,9 @@ func NewFileManagementClient(cc *grpc.ClientConn) FileManagementClient {
 	return &fileManagementClient{cc}
 }
 
-func (c *fileManagementClient) GetFolderContent(ctx context.Context, in *GetFolderContentRequest, opts ...grpc.CallOption) (*GetFolderContentResponse, error) {
-	out := new(GetFolderContentResponse)
-	err := c.cc.Invoke(ctx, "/fileservice.FileManagement/GetFolderContent", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *fileManagementClient) GetFileContent(ctx context.Context, in *GetFileContentRequest, opts ...grpc.CallOption) (*GetFileContentResponse, error) {
-	out := new(GetFileContentResponse)
-	err := c.cc.Invoke(ctx, "/fileservice.FileManagement/GetFileContent", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *fileManagementClient) GetFileTree(ctx context.Context, in *GetFileTreeRequest, opts ...grpc.CallOption) (*GetFileTreeResponse, error) {
-	out := new(GetFileTreeResponse)
-	err := c.cc.Invoke(ctx, "/fileservice.FileManagement/GetFileTree", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *fileManagementClient) UpdateFileContent(ctx context.Context, in *UpdateFileContentRequest, opts ...grpc.CallOption) (*UpdateFileContentResponse, error) {
-	out := new(UpdateFileContentResponse)
-	err := c.cc.Invoke(ctx, "/fileservice.FileManagement/UpdateFileContent", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 func (c *fileManagementClient) CreateDrive(ctx context.Context, in *CreateDriveRequest, opts ...grpc.CallOption) (*CreateDriveResponse, error) {
 	out := new(CreateDriveResponse)
-	err := c.cc.Invoke(ctx, "/fileservice.FileManagement/CreateDrive", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/file_service.FileManagement/CreateDrive", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -1480,7 +1543,52 @@ func (c *fileManagementClient) CreateDrive(ctx context.Context, in *CreateDriveR
 
 func (c *fileManagementClient) CreateNewFile(ctx context.Context, in *CreateNewFileRequest, opts ...grpc.CallOption) (*CreateNewFileResponse, error) {
 	out := new(CreateNewFileResponse)
-	err := c.cc.Invoke(ctx, "/fileservice.FileManagement/CreateNewFile", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/file_service.FileManagement/CreateNewFile", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *fileManagementClient) CreateNewFolder(ctx context.Context, in *CreateNewFolderRequest, opts ...grpc.CallOption) (*CreateNewFolderResponse, error) {
+	out := new(CreateNewFolderResponse)
+	err := c.cc.Invoke(ctx, "/file_service.FileManagement/CreateNewFolder", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *fileManagementClient) GetFolderContent(ctx context.Context, in *GetFolderContentRequest, opts ...grpc.CallOption) (*GetFolderContentResponse, error) {
+	out := new(GetFolderContentResponse)
+	err := c.cc.Invoke(ctx, "/file_service.FileManagement/GetFolderContent", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *fileManagementClient) GetFileContent(ctx context.Context, in *GetFileContentRequest, opts ...grpc.CallOption) (*GetFileContentResponse, error) {
+	out := new(GetFileContentResponse)
+	err := c.cc.Invoke(ctx, "/file_service.FileManagement/GetFileContent", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *fileManagementClient) GetFileTree(ctx context.Context, in *GetFileTreeRequest, opts ...grpc.CallOption) (*GetFileTreeResponse, error) {
+	out := new(GetFileTreeResponse)
+	err := c.cc.Invoke(ctx, "/file_service.FileManagement/GetFileTree", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *fileManagementClient) UpdateFileContent(ctx context.Context, in *UpdateFileContentRequest, opts ...grpc.CallOption) (*UpdateFileContentResponse, error) {
+	out := new(UpdateFileContentResponse)
+	err := c.cc.Invoke(ctx, "/file_service.FileManagement/UpdateFileContent", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -1489,7 +1597,7 @@ func (c *fileManagementClient) CreateNewFile(ctx context.Context, in *CreateNewF
 
 func (c *fileManagementClient) DeleteFile(ctx context.Context, in *DeleteFileRequest, opts ...grpc.CallOption) (*DeleteFileResponse, error) {
 	out := new(DeleteFileResponse)
-	err := c.cc.Invoke(ctx, "/fileservice.FileManagement/DeleteFile", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/file_service.FileManagement/DeleteFile", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -1498,7 +1606,7 @@ func (c *fileManagementClient) DeleteFile(ctx context.Context, in *DeleteFileReq
 
 func (c *fileManagementClient) RenameFile(ctx context.Context, in *RenameFileRequest, opts ...grpc.CallOption) (*RenameFileResponse, error) {
 	out := new(RenameFileResponse)
-	err := c.cc.Invoke(ctx, "/fileservice.FileManagement/RenameFile", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/file_service.FileManagement/RenameFile", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -1507,7 +1615,7 @@ func (c *fileManagementClient) RenameFile(ctx context.Context, in *RenameFileReq
 
 func (c *fileManagementClient) MoveFile(ctx context.Context, in *MoveFileRequest, opts ...grpc.CallOption) (*UploadFileResponse, error) {
 	out := new(UploadFileResponse)
-	err := c.cc.Invoke(ctx, "/fileservice.FileManagement/MoveFile", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/file_service.FileManagement/MoveFile", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -1516,7 +1624,7 @@ func (c *fileManagementClient) MoveFile(ctx context.Context, in *MoveFileRequest
 
 func (c *fileManagementClient) UploadFile(ctx context.Context, in *UploadFileRequest, opts ...grpc.CallOption) (*UploadFileResponse, error) {
 	out := new(UploadFileResponse)
-	err := c.cc.Invoke(ctx, "/fileservice.FileManagement/UploadFile", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/file_service.FileManagement/UploadFile", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -1525,12 +1633,13 @@ func (c *fileManagementClient) UploadFile(ctx context.Context, in *UploadFileReq
 
 // FileManagementServer is the server API for FileManagement service.
 type FileManagementServer interface {
+	CreateDrive(context.Context, *CreateDriveRequest) (*CreateDriveResponse, error)
+	CreateNewFile(context.Context, *CreateNewFileRequest) (*CreateNewFileResponse, error)
+	CreateNewFolder(context.Context, *CreateNewFolderRequest) (*CreateNewFolderResponse, error)
 	GetFolderContent(context.Context, *GetFolderContentRequest) (*GetFolderContentResponse, error)
 	GetFileContent(context.Context, *GetFileContentRequest) (*GetFileContentResponse, error)
 	GetFileTree(context.Context, *GetFileTreeRequest) (*GetFileTreeResponse, error)
 	UpdateFileContent(context.Context, *UpdateFileContentRequest) (*UpdateFileContentResponse, error)
-	CreateDrive(context.Context, *CreateDriveRequest) (*CreateDriveResponse, error)
-	CreateNewFile(context.Context, *CreateNewFileRequest) (*CreateNewFileResponse, error)
 	DeleteFile(context.Context, *DeleteFileRequest) (*DeleteFileResponse, error)
 	RenameFile(context.Context, *RenameFileRequest) (*RenameFileResponse, error)
 	MoveFile(context.Context, *MoveFileRequest) (*UploadFileResponse, error)
@@ -1539,78 +1648,6 @@ type FileManagementServer interface {
 
 func RegisterFileManagementServer(s *grpc.Server, srv FileManagementServer) {
 	s.RegisterService(&_FileManagement_serviceDesc, srv)
-}
-
-func _FileManagement_GetFolderContent_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetFolderContentRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(FileManagementServer).GetFolderContent(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/fileservice.FileManagement/GetFolderContent",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(FileManagementServer).GetFolderContent(ctx, req.(*GetFolderContentRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _FileManagement_GetFileContent_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetFileContentRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(FileManagementServer).GetFileContent(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/fileservice.FileManagement/GetFileContent",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(FileManagementServer).GetFileContent(ctx, req.(*GetFileContentRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _FileManagement_GetFileTree_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetFileTreeRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(FileManagementServer).GetFileTree(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/fileservice.FileManagement/GetFileTree",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(FileManagementServer).GetFileTree(ctx, req.(*GetFileTreeRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _FileManagement_UpdateFileContent_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(UpdateFileContentRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(FileManagementServer).UpdateFileContent(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/fileservice.FileManagement/UpdateFileContent",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(FileManagementServer).UpdateFileContent(ctx, req.(*UpdateFileContentRequest))
-	}
-	return interceptor(ctx, in, info, handler)
 }
 
 func _FileManagement_CreateDrive_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
@@ -1623,7 +1660,7 @@ func _FileManagement_CreateDrive_Handler(srv interface{}, ctx context.Context, d
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/fileservice.FileManagement/CreateDrive",
+		FullMethod: "/file_service.FileManagement/CreateDrive",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(FileManagementServer).CreateDrive(ctx, req.(*CreateDriveRequest))
@@ -1641,10 +1678,100 @@ func _FileManagement_CreateNewFile_Handler(srv interface{}, ctx context.Context,
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/fileservice.FileManagement/CreateNewFile",
+		FullMethod: "/file_service.FileManagement/CreateNewFile",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(FileManagementServer).CreateNewFile(ctx, req.(*CreateNewFileRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _FileManagement_CreateNewFolder_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateNewFolderRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(FileManagementServer).CreateNewFolder(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/file_service.FileManagement/CreateNewFolder",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(FileManagementServer).CreateNewFolder(ctx, req.(*CreateNewFolderRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _FileManagement_GetFolderContent_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetFolderContentRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(FileManagementServer).GetFolderContent(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/file_service.FileManagement/GetFolderContent",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(FileManagementServer).GetFolderContent(ctx, req.(*GetFolderContentRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _FileManagement_GetFileContent_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetFileContentRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(FileManagementServer).GetFileContent(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/file_service.FileManagement/GetFileContent",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(FileManagementServer).GetFileContent(ctx, req.(*GetFileContentRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _FileManagement_GetFileTree_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetFileTreeRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(FileManagementServer).GetFileTree(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/file_service.FileManagement/GetFileTree",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(FileManagementServer).GetFileTree(ctx, req.(*GetFileTreeRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _FileManagement_UpdateFileContent_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateFileContentRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(FileManagementServer).UpdateFileContent(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/file_service.FileManagement/UpdateFileContent",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(FileManagementServer).UpdateFileContent(ctx, req.(*UpdateFileContentRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -1659,7 +1786,7 @@ func _FileManagement_DeleteFile_Handler(srv interface{}, ctx context.Context, de
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/fileservice.FileManagement/DeleteFile",
+		FullMethod: "/file_service.FileManagement/DeleteFile",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(FileManagementServer).DeleteFile(ctx, req.(*DeleteFileRequest))
@@ -1677,7 +1804,7 @@ func _FileManagement_RenameFile_Handler(srv interface{}, ctx context.Context, de
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/fileservice.FileManagement/RenameFile",
+		FullMethod: "/file_service.FileManagement/RenameFile",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(FileManagementServer).RenameFile(ctx, req.(*RenameFileRequest))
@@ -1695,7 +1822,7 @@ func _FileManagement_MoveFile_Handler(srv interface{}, ctx context.Context, dec 
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/fileservice.FileManagement/MoveFile",
+		FullMethod: "/file_service.FileManagement/MoveFile",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(FileManagementServer).MoveFile(ctx, req.(*MoveFileRequest))
@@ -1713,7 +1840,7 @@ func _FileManagement_UploadFile_Handler(srv interface{}, ctx context.Context, de
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/fileservice.FileManagement/UploadFile",
+		FullMethod: "/file_service.FileManagement/UploadFile",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(FileManagementServer).UploadFile(ctx, req.(*UploadFileRequest))
@@ -1722,9 +1849,21 @@ func _FileManagement_UploadFile_Handler(srv interface{}, ctx context.Context, de
 }
 
 var _FileManagement_serviceDesc = grpc.ServiceDesc{
-	ServiceName: "fileservice.FileManagement",
+	ServiceName: "file_service.FileManagement",
 	HandlerType: (*FileManagementServer)(nil),
 	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "CreateDrive",
+			Handler:    _FileManagement_CreateDrive_Handler,
+		},
+		{
+			MethodName: "CreateNewFile",
+			Handler:    _FileManagement_CreateNewFile_Handler,
+		},
+		{
+			MethodName: "CreateNewFolder",
+			Handler:    _FileManagement_CreateNewFolder_Handler,
+		},
 		{
 			MethodName: "GetFolderContent",
 			Handler:    _FileManagement_GetFolderContent_Handler,
@@ -1740,14 +1879,6 @@ var _FileManagement_serviceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "UpdateFileContent",
 			Handler:    _FileManagement_UpdateFileContent_Handler,
-		},
-		{
-			MethodName: "CreateDrive",
-			Handler:    _FileManagement_CreateDrive_Handler,
-		},
-		{
-			MethodName: "CreateNewFile",
-			Handler:    _FileManagement_CreateNewFile_Handler,
 		},
 		{
 			MethodName: "DeleteFile",
