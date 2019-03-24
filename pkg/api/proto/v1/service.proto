@@ -123,6 +123,23 @@ message UpdateFileContentResponse {
     int32 response_code = 1;
     string response_message = 2;
 }
+message ShareFileRequest {
+    string identifier = 1;
+    repeated string user_identifiers = 2;
+}
+message ShareFileResponse {
+    int32 response_code = 1;
+    string response_message = 2;
+}
+message DownloadFileRequest {
+    string identifier = 1;
+}
+message DownloadFileResponse {
+    int32 response_code = 1;
+    string response_message = 2;
+    File file = 3;
+    bytes content = 4;
+}
 service FileManagement {
     rpc CreateDrive(CreateDriveRequest) returns (CreateDriveResponse) {}
     rpc CreateNewFile(CreateNewFileRequest) returns (CreateNewFileResponse) {}
@@ -135,4 +152,6 @@ service FileManagement {
     rpc RenameFile(RenameFileRequest) returns (RenameFileResponse) {}
     rpc MoveFile(MoveFileRequest) returns (UploadFileResponse) {}
     rpc UploadFile(UploadFileRequest) returns (UploadFileResponse) {} 
+    rpc ShareFile(ShareFileRequest) returns (ShareFileResponse) {} 
+    rpc DownloadFile(DownloadFileRequest) returns (DownloadFileResponse) {} 
 }
