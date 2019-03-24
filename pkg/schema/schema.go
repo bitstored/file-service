@@ -32,10 +32,10 @@ type FSLevel struct {
 	FoldersID []string
 }
 
-type FSTree struct {
-	RootID   string
-	Children []FSTree
-	Files    []File
+type FSLevelDetailed struct {
+	RootID  string
+	Folders []Folder
+	Files   []File
 }
 
 type EncriptionKey struct {
