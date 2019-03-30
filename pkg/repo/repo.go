@@ -278,6 +278,22 @@ func (r *Repository) DeleteFile(ctx context.Context, userID string, fileID strin
 	return nil
 }
 
+func (r *Repository) DownloadFile(ctx context.Context, userID, fileID string) (*schema.Content, error) {
+	file := new(schema.File)
+	_, err := r.next.Read(ctx, fileID, file)
+	if err != nil {
+		return nil, fmt.Errorf("failed to read File %s: %v", fileID, err.Error())
+	}
+	contentID := file.ContentID
+	content := new(schema.Content)
+
+	_, err = r.next.Read(ctx, contentID, &content)
+	if err != nil {
+		return nil, fmt.Errorf("failed to read content %s: %v", contentID, err.Error())
+	}
+	return content, nil
+}
+
 // func (r *Repository) RenameFile(ctx context.Context, in *pb.RenameFileRequest) (*pb.RenameFileResponse, error) {
 // 	return nil, nil
 // }
