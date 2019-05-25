@@ -42,3 +42,9 @@ type EncriptionKey struct {
 	Key      string
 	EntityID string
 }
+
+type SharedFile struct {
+	ID        string
+	OwnerID   string
+	TargetID string
+}

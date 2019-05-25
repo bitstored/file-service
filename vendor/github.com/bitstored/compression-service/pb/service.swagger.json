@@ -1,0 +1,268 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "service.proto",
+    "version": "version not set"
+  },
+  "schemes": [
+    "http",
+    "https"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/compression/api/v1/image/compress": {
+      "post": {
+        "operationId": "CompressImage",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/compression_serviceCompressImageResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/compression_serviceCompressImageRequest"
+            }
+          }
+        ],
+        "tags": [
+          "Compression"
+        ]
+      }
+    },
+    "/compression/api/v1/image/decompress": {
+      "post": {
+        "operationId": "DecompressImage",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/compression_serviceDecompressImageResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/compression_serviceDecompressImageRequest"
+            }
+          }
+        ],
+        "tags": [
+          "Compression"
+        ]
+      }
+    },
+    "/compression/api/v1/text/compress": {
+      "post": {
+        "operationId": "CompressText",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/compression_serviceCompressTextResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/compression_serviceCompressTextRequest"
+            }
+          }
+        ],
+        "tags": [
+          "Compression"
+        ]
+      }
+    },
+    "/compression/api/v1/text/decompress": {
+      "post": {
+        "operationId": "DecompressText",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/compression_serviceDecompressTextResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/compression_serviceDecompressTextRequest"
+            }
+          }
+        ],
+        "tags": [
+          "Compression"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "compression_serviceCompressImageRequest": {
+      "type": "object",
+      "properties": {
+        "image": {
+          "type": "string",
+          "format": "byte"
+        },
+        "level": {
+          "$ref": "#/definitions/compression_serviceCompressionLevel"
+        },
+        "type": {
+          "$ref": "#/definitions/compression_serviceImageType"
+        }
+      }
+    },
+    "compression_serviceCompressImageResponse": {
+      "type": "object",
+      "properties": {
+        "response_code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "response_message": {
+          "type": "string"
+        },
+        "image": {
+          "type": "string",
+          "format": "byte"
+        },
+        "format": {
+          "type": "string"
+        },
+        "level": {
+          "$ref": "#/definitions/compression_serviceCompressionLevel"
+        }
+      }
+    },
+    "compression_serviceCompressTextRequest": {
+      "type": "object",
+      "properties": {
+        "text": {
+          "type": "string",
+          "format": "byte"
+        },
+        "level": {
+          "$ref": "#/definitions/compression_serviceCompressionLevel"
+        }
+      }
+    },
+    "compression_serviceCompressTextResponse": {
+      "type": "object",
+      "properties": {
+        "response_code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "response_message": {
+          "type": "string"
+        },
+        "text": {
+          "type": "string",
+          "format": "byte"
+        },
+        "level": {
+          "$ref": "#/definitions/compression_serviceCompressionLevel"
+        }
+      }
+    },
+    "compression_serviceCompressionLevel": {
+      "type": "string",
+      "enum": [
+        "DefaultCompression",
+        "NoCompression",
+        "BestSpeed",
+        "BestCompression",
+        "HuffmanOnly"
+      ],
+      "default": "DefaultCompression"
+    },
+    "compression_serviceDecompressImageRequest": {
+      "type": "object",
+      "properties": {
+        "image": {
+          "type": "string",
+          "format": "byte"
+        },
+        "level": {
+          "$ref": "#/definitions/compression_serviceCompressionLevel"
+        },
+        "type": {
+          "$ref": "#/definitions/compression_serviceImageType"
+        }
+      }
+    },
+    "compression_serviceDecompressImageResponse": {
+      "type": "object",
+      "properties": {
+        "response_code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "response_message": {
+          "type": "string"
+        },
+        "image": {
+          "type": "string",
+          "format": "byte"
+        }
+      }
+    },
+    "compression_serviceDecompressTextRequest": {
+      "type": "object",
+      "properties": {
+        "text": {
+          "type": "string",
+          "format": "byte"
+        }
+      }
+    },
+    "compression_serviceDecompressTextResponse": {
+      "type": "object",
+      "properties": {
+        "response_code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "response_message": {
+          "type": "string"
+        },
+        "text": {
+          "type": "string",
+          "format": "byte"
+        }
+      }
+    },
+    "compression_serviceImageType": {
+      "type": "string",
+      "enum": [
+        "PNG",
+        "JPEG"
+      ],
+      "default": "PNG"
+    }
+  }
+}

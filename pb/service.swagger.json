@@ -1,0 +1,731 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "service.proto",
+    "version": "version not set"
+  },
+  "schemes": [
+    "http",
+    "https"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/files/api/v1/drive/create": {
+      "post": {
+        "operationId": "CreateDrive",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/file_serviceCreateDriveResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/file_serviceCreateDriveRequest"
+            }
+          }
+        ],
+        "tags": [
+          "FileManagement"
+        ]
+      }
+    },
+    "/files/api/v1/drive/tree": {
+      "get": {
+        "operationId": "GetFileTree",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/file_serviceGetFileTreeResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "root_identifier",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "FileManagement"
+        ]
+      }
+    },
+    "/files/api/v1/file/content": {
+      "get": {
+        "operationId": "GetFileContent",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/file_serviceGetFileContentResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "identifier",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "FileManagement"
+        ]
+      }
+    },
+    "/files/api/v1/file/create": {
+      "post": {
+        "operationId": "CreateNewFile",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/file_serviceCreateNewFileResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/file_serviceCreateNewFileRequest"
+            }
+          }
+        ],
+        "tags": [
+          "FileManagement"
+        ]
+      }
+    },
+    "/files/api/v1/file/delete": {
+      "post": {
+        "operationId": "DeleteFile",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/file_serviceDeleteFileResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/file_serviceDeleteFileRequest"
+            }
+          }
+        ],
+        "tags": [
+          "FileManagement"
+        ]
+      }
+    },
+    "/files/api/v1/file/download": {
+      "post": {
+        "operationId": "DownloadFile",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/file_serviceDownloadFileResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/file_serviceDownloadFileRequest"
+            }
+          }
+        ],
+        "tags": [
+          "FileManagement"
+        ]
+      }
+    },
+    "/files/api/v1/file/move": {
+      "post": {
+        "operationId": "MoveFile",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/file_serviceUploadFileResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/file_serviceMoveFileRequest"
+            }
+          }
+        ],
+        "tags": [
+          "FileManagement"
+        ]
+      }
+    },
+    "/files/api/v1/file/rename": {
+      "post": {
+        "operationId": "RenameFile",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/file_serviceRenameFileResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/file_serviceRenameFileRequest"
+            }
+          }
+        ],
+        "tags": [
+          "FileManagement"
+        ]
+      }
+    },
+    "/files/api/v1/file/share": {
+      "post": {
+        "operationId": "ShareFile",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/file_serviceShareFileResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/file_serviceShareFileRequest"
+            }
+          }
+        ],
+        "tags": [
+          "FileManagement"
+        ]
+      }
+    },
+    "/files/api/v1/file/update": {
+      "post": {
+        "operationId": "UpdateFileContent",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/file_serviceUpdateFileContentResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/file_serviceUpdateFileContentRequest"
+            }
+          }
+        ],
+        "tags": [
+          "FileManagement"
+        ]
+      }
+    },
+    "/files/api/v1/file/upload": {
+      "post": {
+        "operationId": "UploadFile",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/file_serviceUploadFileResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/file_serviceUploadFileRequest"
+            }
+          }
+        ],
+        "tags": [
+          "FileManagement"
+        ]
+      }
+    },
+    "/files/api/v1/folder/content": {
+      "get": {
+        "operationId": "GetFolderContent",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/file_serviceGetFolderContentResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "identifier",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "FileManagement"
+        ]
+      }
+    },
+    "/files/api/v1/folder/create": {
+      "post": {
+        "operationId": "CreateNewFolder",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/file_serviceCreateNewFolderResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/file_serviceCreateNewFolderRequest"
+            }
+          }
+        ],
+        "tags": [
+          "FileManagement"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "file_serviceCreateDriveRequest": {
+      "type": "object",
+      "properties": {
+        "user_id": {
+          "type": "string"
+        }
+      }
+    },
+    "file_serviceCreateDriveResponse": {
+      "type": "object",
+      "properties": {
+        "response_code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "response_message": {
+          "type": "string"
+        },
+        "drive_id": {
+          "type": "string"
+        }
+      }
+    },
+    "file_serviceCreateNewFileRequest": {
+      "type": "object",
+      "properties": {
+        "file": {
+          "$ref": "#/definitions/file_serviceFile"
+        },
+        "destination": {
+          "type": "string"
+        }
+      }
+    },
+    "file_serviceCreateNewFileResponse": {
+      "type": "object",
+      "properties": {
+        "response_code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "response_message": {
+          "type": "string"
+        },
+        "file_id": {
+          "type": "string"
+        }
+      }
+    },
+    "file_serviceCreateNewFolderRequest": {
+      "type": "object",
+      "properties": {
+        "file": {
+          "$ref": "#/definitions/file_serviceFile"
+        },
+        "destination": {
+          "type": "string"
+        }
+      }
+    },
+    "file_serviceCreateNewFolderResponse": {
+      "type": "object",
+      "properties": {
+        "response_code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "response_message": {
+          "type": "string"
+        },
+        "file_id": {
+          "type": "string"
+        }
+      }
+    },
+    "file_serviceDeleteFileRequest": {
+      "type": "object",
+      "properties": {
+        "identifier": {
+          "type": "string"
+        }
+      }
+    },
+    "file_serviceDeleteFileResponse": {
+      "type": "object",
+      "properties": {
+        "response_code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "response_message": {
+          "type": "string"
+        }
+      }
+    },
+    "file_serviceDownloadFileRequest": {
+      "type": "object",
+      "properties": {
+        "identifier": {
+          "type": "string"
+        }
+      }
+    },
+    "file_serviceDownloadFileResponse": {
+      "type": "object",
+      "properties": {
+        "response_code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "response_message": {
+          "type": "string"
+        },
+        "file": {
+          "$ref": "#/definitions/file_serviceFile"
+        },
+        "content": {
+          "type": "string",
+          "format": "byte"
+        }
+      }
+    },
+    "file_serviceFSLevel": {
+      "type": "object",
+      "properties": {
+        "folder": {
+          "$ref": "#/definitions/file_serviceFolder"
+        },
+        "folders": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/file_serviceFolder"
+          }
+        },
+        "files": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/file_serviceFile"
+          }
+        }
+      }
+    },
+    "file_serviceFSTree": {
+      "type": "object",
+      "properties": {
+        "folder": {
+          "$ref": "#/definitions/file_serviceFolder"
+        },
+        "children": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/file_serviceFSLevel"
+          }
+        },
+        "files": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/file_serviceFile"
+          }
+        }
+      }
+    },
+    "file_serviceFile": {
+      "type": "object",
+      "properties": {
+        "parent_identifier": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "identifier": {
+          "type": "string"
+        },
+        "creation_date": {
+          "type": "string"
+        },
+        "file_type": {
+          "$ref": "#/definitions/file_serviceFileType"
+        },
+        "writable": {
+          "type": "boolean",
+          "format": "boolean"
+        },
+        "private": {
+          "type": "boolean",
+          "format": "boolean"
+        },
+        "content": {
+          "type": "string",
+          "format": "byte"
+        }
+      }
+    },
+    "file_serviceFileType": {
+      "type": "string",
+      "enum": [
+        "OTHER",
+        "DOC",
+        "PDF",
+        "TXT",
+        "EXCEL",
+        "IMAGE"
+      ],
+      "default": "OTHER"
+    },
+    "file_serviceFolder": {
+      "type": "object",
+      "properties": {
+        "parent_identifier": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "identifier": {
+          "type": "string"
+        },
+        "creation_date": {
+          "type": "string"
+        }
+      }
+    },
+    "file_serviceGetFileContentResponse": {
+      "type": "object",
+      "properties": {
+        "response_code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "response_message": {
+          "type": "string"
+        },
+        "file": {
+          "$ref": "#/definitions/file_serviceFile"
+        }
+      }
+    },
+    "file_serviceGetFileTreeResponse": {
+      "type": "object",
+      "properties": {
+        "response_code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "response_message": {
+          "type": "string"
+        },
+        "tree": {
+          "$ref": "#/definitions/file_serviceFSTree"
+        }
+      }
+    },
+    "file_serviceGetFolderContentResponse": {
+      "type": "object",
+      "properties": {
+        "response_code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "response_message": {
+          "type": "string"
+        },
+        "content": {
+          "$ref": "#/definitions/file_serviceFSLevel"
+        }
+      }
+    },
+    "file_serviceMoveFileRequest": {
+      "type": "object",
+      "properties": {
+        "identifier": {
+          "type": "string"
+        },
+        "destination": {
+          "type": "string"
+        }
+      }
+    },
+    "file_serviceRenameFileRequest": {
+      "type": "object",
+      "properties": {
+        "identifier": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        }
+      }
+    },
+    "file_serviceRenameFileResponse": {
+      "type": "object",
+      "properties": {
+        "response_code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "response_message": {
+          "type": "string"
+        }
+      }
+    },
+    "file_serviceShareFileRequest": {
+      "type": "object",
+      "properties": {
+        "identifier": {
+          "type": "string"
+        },
+        "user_identifiers": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "file_serviceShareFileResponse": {
+      "type": "object",
+      "properties": {
+        "response_code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "response_message": {
+          "type": "string"
+        }
+      }
+    },
+    "file_serviceUpdateFileContentRequest": {
+      "type": "object",
+      "properties": {
+        "identifier": {
+          "type": "string"
+        },
+        "new_content": {
+          "type": "string",
+          "format": "byte"
+        }
+      }
+    },
+    "file_serviceUpdateFileContentResponse": {
+      "type": "object",
+      "properties": {
+        "response_code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "response_message": {
+          "type": "string"
+        }
+      }
+    },
+    "file_serviceUploadFileRequest": {
+      "type": "object",
+      "properties": {
+        "file": {
+          "$ref": "#/definitions/file_serviceFile"
+        },
+        "destination": {
+          "type": "string"
+        }
+      }
+    },
+    "file_serviceUploadFileResponse": {
+      "type": "object",
+      "properties": {
+        "response_code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "response_message": {
+          "type": "string"
+        },
+        "file_id": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

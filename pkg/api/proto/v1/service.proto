@@ -2,6 +2,86 @@ syntax = "proto3";
 
 package file_service;
 option go_package="pb";
+import "google/api/annotations.proto";
+
+service FileManagement {
+    rpc CreateDrive(CreateDriveRequest) returns (CreateDriveResponse) {
+		option (google.api.http) = {
+            post: "/files/api/v1/drive/create"
+            body: "*"
+        };
+	}
+    rpc CreateNewFile(CreateNewFileRequest) returns (CreateNewFileResponse) {
+		option (google.api.http) = {
+            post: "/files/api/v1/file/create"
+            body: "*"
+        };
+	}
+    rpc CreateNewFolder(CreateNewFolderRequest) returns (CreateNewFolderResponse) {
+		option (google.api.http) = {
+            post: "/files/api/v1/folder/create"
+            body: "*"
+        };
+	}
+    rpc GetFolderContent(GetFolderContentRequest) returns (GetFolderContentResponse) {
+		option (google.api.http) = {
+            get: "/files/api/v1/folder/content"
+        };
+	}
+    rpc GetFileContent(GetFileContentRequest) returns (GetFileContentResponse) {
+		option (google.api.http) = {
+            get: "/files/api/v1/file/content"
+        };
+	}
+    rpc GetFileTree(GetFileTreeRequest) returns (GetFileTreeResponse) {
+		option (google.api.http) = {
+            get: "/files/api/v1/drive/tree"
+        };
+	}
+    rpc UpdateFileContent(UpdateFileContentRequest) returns (UpdateFileContentResponse) {
+		option (google.api.http) = {
+            post: "/files/api/v1/file/update"
+            body: "*"
+        };
+	}
+    rpc DeleteFile(DeleteFileRequest) returns (DeleteFileResponse) {
+		option (google.api.http) = {
+            post: "/files/api/v1/file/delete"
+            body: "*"
+        };
+	}
+    rpc RenameFile(RenameFileRequest) returns (RenameFileResponse) {
+		option (google.api.http) = {
+            post: "/files/api/v1/file/rename"
+            body: "*"
+        };
+	}
+    rpc MoveFile(MoveFileRequest) returns (UploadFileResponse) {
+		option (google.api.http) = {
+            post: "/files/api/v1/file/move"
+            body: "*"
+        };
+	}
+    rpc UploadFile(UploadFileRequest) returns (UploadFileResponse) {
+		option (google.api.http) = {
+            post: "/files/api/v1/file/upload"
+            body: "*"
+        };
+	} 
+	rpc ShareFile(ShareFileRequest) returns (ShareFileResponse) {
+		option (google.api.http) = {
+            post: "/files/api/v1/file/share"
+            body: "*"
+        };
+	} 
+    rpc DownloadFile(DownloadFileRequest) returns (DownloadFileResponse) {
+		option (google.api.http) = {
+            post: "/files/api/v1/file/download"
+            body: "*"
+        };
+	} 
+		// TODO add methods for shared files
+}
 
 message Folder {
     string parent_identifier = 1;
@@ -42,7 +122,8 @@ message CreateDriveRequest {
 }
 message CreateDriveResponse {
     int32 response_code = 1;
-    string response_message = 2;
+	string response_message = 2;
+	string drive_id = 3;
 }
 message UploadFileRequest {
     File file = 1;
@@ -50,7 +131,8 @@ message UploadFileRequest {
 }
 message UploadFileResponse {
     int32 response_code = 1;
-    string response_message = 2;
+	string response_message = 2;
+	string file_id = 3;
 }
 message CreateNewFileRequest {
     File file = 1;
@@ -58,7 +140,8 @@ message CreateNewFileRequest {
 }
 message CreateNewFileResponse {
     int32 response_code = 1;
-    string response_message = 2;
+	string response_message = 2;
+	string file_id = 3;
 }
 message CreateNewFolderRequest {
     File file = 1;
@@ -66,7 +149,8 @@ message CreateNewFolderRequest {
 }
 message CreateNewFolderResponse {
     int32 response_code = 1;
-    string response_message = 2;
+	string response_message = 2;
+	string file_id = 3;
 }
 message DeleteFileRequest {
     string identifier = 1;
@@ -123,16 +207,21 @@ message UpdateFileContentResponse {
     int32 response_code = 1;
     string response_message = 2;
 }
-service FileManagement {
-    rpc CreateDrive(CreateDriveRequest) returns (CreateDriveResponse) {}
-    rpc CreateNewFile(CreateNewFileRequest) returns (CreateNewFileResponse) {}
-    rpc CreateNewFolder(CreateNewFolderRequest) returns (CreateNewFolderResponse) {}
-    rpc GetFolderContent(GetFolderContentRequest) returns (GetFolderContentResponse) {}
-    rpc GetFileContent(GetFileContentRequest) returns (GetFileContentResponse) {}
-    rpc GetFileTree(GetFileTreeRequest) returns (GetFileTreeResponse) {}
-    rpc UpdateFileContent(UpdateFileContentRequest) returns (UpdateFileContentResponse) {}
-    rpc DeleteFile(DeleteFileRequest) returns (DeleteFileResponse) {}
-    rpc RenameFile(RenameFileRequest) returns (RenameFileResponse) {}
-    rpc MoveFile(MoveFileRequest) returns (UploadFileResponse) {}
-    rpc UploadFile(UploadFileRequest) returns (UploadFileResponse) {} 
+message ShareFileRequest {
+    string identifier = 1;
+    repeated string user_identifiers = 2;
 }
+message ShareFileResponse {
+    int32 response_code = 1;
+    string response_message = 2;
+}
+message DownloadFileRequest {
+    string identifier = 1;
+}
+message DownloadFileResponse {
+    int32 response_code = 1;
+    string response_message = 2;
+    File file = 3;
+    bytes content = 4;
+}
+

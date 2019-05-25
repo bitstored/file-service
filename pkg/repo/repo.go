@@ -5,11 +5,12 @@ import (
 	"crypto/rand"
 	"encoding/base64"
 	"fmt"
+	"sync"
+	"time"
+
 	"github.com/bitstored/file-service/pkg/schema"
 	cdb "github.com/bitstored/repository/pkg/couchbaserepo"
 	"github.com/couchbase/gocb"
-	"sync"
-	"time"
 )
 
 type DriveID string
@@ -26,6 +27,7 @@ const (
 	fileIDFormat    = "flid:%v"
 	contentIDFormat = "cid:%v"
 	levelID         = "level"
+	sharedID        = "shared"
 	ownerKey        = "owner"
 	timeKey         = "createdAt"
 )
@@ -146,6 +148,25 @@ func (r *Repository) CreateNewFile(ctx context.Context, userID string, name stri
 		r.next.Delete(ctx, contentID, cas)
 		return "", err
 	}
+
+	rLevel := new(schema.FSLevel)
+
+	r.mux.RLock()
+	cas1, err := r.next.Read(ctx, levelID+destinationID, rLevel)
+	r.mux.RUnlock()
+
+	if err != nil {
+		return "", fmt.Errorf("failed to read FSLevel")
+	}
+	rLevel.FilesID = append(rLevel.FilesID, fileID)
+
+	r.mux.Lock()
+	_, err = r.next.Update(ctx, levelID+destinationID, cas1, rLevel)
+	if err != nil {
+		r.mux.Unlock()
+		return "", fmt.Errorf("failed to read FSLevel")
+	}
+	r.mux.Unlock()
 	return
 }
 func (r *Repository) UploadFile(ctx context.Context, userID string, name string, destinationID string, fileType string, writable bool, private bool, content []byte) (fileID string, err error) {
@@ -176,8 +197,27 @@ func (r *Repository) UploadFile(ctx context.Context, userID string, name string,
 		r.next.Delete(ctx, contentID, cas)
 		return "", err
 	}
+	rLevel := new(schema.FSLevel)
+
+	r.mux.RLock()
+	cas1, err := r.next.Read(ctx, levelID+destinationID, rLevel)
+	r.mux.RUnlock()
+
+	if err != nil {
+		return "", fmt.Errorf("failed to read FSLevel")
+	}
+	rLevel.FilesID = append(rLevel.FilesID, fileID)
+
+	r.mux.Lock()
+	_, err = r.next.Update(ctx, levelID+destinationID, cas1, rLevel)
+	if err != nil {
+		r.mux.Unlock()
+		return "", fmt.Errorf("failed to read FSLevel")
+	}
+	r.mux.Unlock()
 	return
 }
+
 func (r *Repository) GetFileContent(ctx context.Context, userID, fileID string) (*schema.Content, error) {
 	file := new(schema.File)
 	_, err := r.next.Read(ctx, fileID, file)
@@ -200,8 +240,8 @@ func (r *Repository) GetFolderContent(ctx context.Context, userID, folderID stri
 	if err != nil {
 		return nil, fmt.Errorf("failed to read folder content %s: %v", folderID, err.Error())
 	}
-	folders := make([]schema.Folder, len(level.FoldersID))
-	files := make([]schema.File, len(level.FilesID))
+	folders := make([]schema.Folder, 0)
+	files := make([]schema.File, 0)
 
 	for _, fileID := range level.FilesID {
 		file := new(schema.File)
@@ -223,14 +263,14 @@ func (r *Repository) GetFolderContent(ctx context.Context, userID, folderID stri
 	return &schema.FSLevelDetailed{RootID: folderID, Folders: folders, Files: files}, nil
 }
 func (r *Repository) UpdateFileContent(ctx context.Context, userID string, fileID string, content []byte) (uint, error) {
-	var file schema.File
+	file := new(schema.File)
 	r.mux.RLock()
-	if _, err := r.next.Read(ctx, fileID, file); err != nil {
+	if _, err := r.next.Read(ctx, fileID, &file); err != nil {
 		r.mux.RUnlock()
 		return 0, err
 	}
-	var c schema.Content
-	cas, err := r.next.Read(ctx, file.ContentID, c)
+	c := new(schema.Content)
+	cas, err := r.next.Read(ctx, file.ContentID, &c)
 	if err != nil {
 		r.mux.RUnlock()
 		return 0, err
@@ -247,17 +287,17 @@ func (r *Repository) UpdateFileContent(ctx context.Context, userID string, fileI
 	return 0, nil
 }
 func (r *Repository) DeleteFile(ctx context.Context, userID string, fileID string) error {
-	var file schema.File
+	file := new(schema.File)
 	r.mux.RLock()
 	var fcas uint
-	fcas, err := r.next.Read(ctx, fileID, file)
+	fcas, err := r.next.Read(ctx, fileID, &file)
 	if err != nil {
 		r.mux.RUnlock()
 		return err
 	}
-	var c schema.Content
+	c := new(schema.Content)
 	var ccas uint
-	ccas, err = r.next.Read(ctx, file.ContentID, c)
+	ccas, err = r.next.Read(ctx, file.ContentID, &c)
 	if err != nil {
 		r.mux.RUnlock()
 		return err
@@ -278,12 +318,95 @@ func (r *Repository) DeleteFile(ctx context.Context, userID string, fileID strin
 	return nil
 }
 
-// func (r *Repository) RenameFile(ctx context.Context, in *pb.RenameFileRequest) (*pb.RenameFileResponse, error) {
-// 	return nil, nil
-// }
-// func (r *Repository) MoveFile(ctx context.Context, in *pb.MoveFileRequest) (*pb.UploadFileResponse, error) {
-// 	return nil, nil
-// }
+func (r *Repository) DownloadFile(ctx context.Context, userID, fileID string) (*schema.File, *schema.Content, error) {
+	file := new(schema.File)
+	_, err := r.next.Read(ctx, fileID, &file)
+	if err != nil {
+		return nil, nil, fmt.Errorf("failed to read File %s: %v", fileID, err.Error())
+	}
+	contentID := file.ContentID
+	content := new(schema.Content)
+
+	_, err = r.next.Read(ctx, contentID, &content)
+	if err != nil {
+		return nil, nil, fmt.Errorf("failed to read content %s: %v", contentID, err.Error())
+	}
+	return file, content, nil
+}
+
+func (r *Repository) RenameFile(ctx context.Context, userID, fileID, newName string) error {
+	file := new(schema.File)
+	r.mux.RLock()
+	cas, err := r.next.Read(ctx, fileID, &file)
+	if err != nil {
+		r.mux.RUnlock()
+		return err
+	}
+	r.mux.RUnlock()
+	file.Name = newName
+	r.mux.Lock()
+	if _, err := r.next.Update(ctx, file.ID, cas, file); err != nil {
+		r.mux.Unlock()
+		return err
+	}
+	r.mux.Unlock()
+	return nil
+}
+
+func (r *Repository) MoveFile(ctx context.Context, targetID, sourceID, destinationID string, copy bool) error {
+	slevel := new(schema.FSLevel)
+	dlevel := new(schema.FSLevel)
+	r.mux.RLock()
+	scas, err := r.next.Read(ctx, levelID+sourceID, &slevel)
+	if err != nil {
+		r.mux.RUnlock()
+		return fmt.Errorf("failed to read folder content %s: %v", sourceID, err.Error())
+	}
+	dcas, err := r.next.Read(ctx, levelID+destinationID, &dlevel)
+	if err != nil {
+		r.mux.RUnlock()
+		return fmt.Errorf("failed to read folder content %s: %v", sourceID, err.Error())
+	}
+	r.mux.RUnlock()
+
+	var index int = -1
+	for i := range slevel.FilesID {
+		if slevel.FilesID[i] == targetID {
+			index = i
+		}
+	}
+	if index != -1 {
+		dlevel.FilesID = append(dlevel.FilesID, slevel.FilesID[index])
+		slevel.FilesID = append(slevel.FilesID[0:index], slevel.FilesID[index:]...)
+	}
+	index = -1
+	for i := range slevel.FoldersID {
+		if slevel.FoldersID[i] == targetID {
+			index = i
+		}
+	}
+	if index != -1 {
+		dlevel.FoldersID = append(dlevel.FoldersID, slevel.FoldersID[index])
+		slevel.FoldersID = append(slevel.FoldersID[0:index], slevel.FoldersID[index:]...)
+	}
+
+	r.mux.Lock()
+	if !copy {
+		_, err = r.next.Update(ctx, levelID+sourceID, scas, slevel)
+		if err != nil {
+			r.mux.Unlock()
+			return fmt.Errorf("failed to read FSLevel")
+		}
+	}
+	_, err = r.next.Update(ctx, levelID+destinationID, dcas, dlevel)
+	if err != nil {
+		r.mux.Unlock()
+		return fmt.Errorf("failed to read FSLevel")
+	}
+	r.mux.Unlock()
+	return nil
+}
+
 func NewFileRepository() (*Repository, error) {
 	// connect to cluster
 	cluster, err := gocb.Connect(connSpecStr)
