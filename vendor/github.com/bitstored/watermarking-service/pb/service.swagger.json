@@ -1,0 +1,216 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "service.proto",
+    "version": "version not set"
+  },
+  "schemes": [
+    "http",
+    "https"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/watermarking/api/v1/image/image": {
+      "post": {
+        "operationId": "WatermarkImageWithImage",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/watermarking_serviceWatermarkImageWithImageResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/watermarking_serviceWatermarkImageWithImageRequest"
+            }
+          }
+        ],
+        "tags": [
+          "Watermarking"
+        ]
+      }
+    },
+    "/watermarking/api/v1/image/text": {
+      "post": {
+        "operationId": "WatermarkImageWithText",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/watermarking_serviceWatermarkImageWithTextResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/watermarking_serviceWatermarkImageWithTextRequest"
+            }
+          }
+        ],
+        "tags": [
+          "Watermarking"
+        ]
+      }
+    },
+    "/watermarking/api/v1/stegano/decode": {
+      "post": {
+        "operationId": "DecodeMessage",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/watermarking_serviceDecodeMessageResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/watermarking_serviceDecodeMessageRequest"
+            }
+          }
+        ],
+        "tags": [
+          "Watermarking"
+        ]
+      }
+    },
+    "/watermarking/api/v1/stegano/encode": {
+      "post": {
+        "operationId": "EncodeMessage",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/watermarking_serviceEncodeMessageResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/watermarking_serviceEncodeMessageRequest"
+            }
+          }
+        ],
+        "tags": [
+          "Watermarking"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "watermarking_serviceDecodeMessageRequest": {
+      "type": "object",
+      "properties": {
+        "image": {
+          "type": "string",
+          "format": "byte"
+        }
+      }
+    },
+    "watermarking_serviceDecodeMessageResponse": {
+      "type": "object",
+      "properties": {
+        "image": {
+          "type": "string",
+          "format": "byte"
+        },
+        "text": {
+          "type": "string",
+          "format": "byte"
+        }
+      }
+    },
+    "watermarking_serviceEncodeMessageRequest": {
+      "type": "object",
+      "properties": {
+        "image": {
+          "type": "string",
+          "format": "byte"
+        },
+        "text": {
+          "type": "string",
+          "format": "byte"
+        },
+        "full_message": {
+          "type": "boolean",
+          "format": "boolean"
+        }
+      }
+    },
+    "watermarking_serviceEncodeMessageResponse": {
+      "type": "object",
+      "properties": {
+        "image": {
+          "type": "string",
+          "format": "byte"
+        }
+      }
+    },
+    "watermarking_serviceWatermarkImageWithImageRequest": {
+      "type": "object",
+      "properties": {
+        "image": {
+          "type": "string",
+          "format": "byte"
+        },
+        "watermark": {
+          "type": "string",
+          "format": "byte"
+        }
+      }
+    },
+    "watermarking_serviceWatermarkImageWithImageResponse": {
+      "type": "object",
+      "properties": {
+        "image": {
+          "type": "string",
+          "format": "byte"
+        }
+      }
+    },
+    "watermarking_serviceWatermarkImageWithTextRequest": {
+      "type": "object",
+      "properties": {
+        "image": {
+          "type": "string",
+          "format": "byte"
+        },
+        "watermark": {
+          "type": "string"
+        }
+      }
+    },
+    "watermarking_serviceWatermarkImageWithTextResponse": {
+      "type": "object",
+      "properties": {
+        "image": {
+          "type": "string",
+          "format": "byte"
+        }
+      }
+    }
+  }
+}

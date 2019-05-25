@@ -2,18 +2,34 @@ package server
 
 import (
 	"context"
+
 	"github.com/bitstored/file-service/pb"
+	"github.com/bitstored/file-service/pkg/service"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 )
 
 type Server struct {
+	Service *service.Service
 }
 
-func NewServer() *Server {
-	return &Server{}
+func NewServer(s *service.Service) *Server {
+	return &Server{s}
 }
 func (s *Server) CreateDrive(ctx context.Context, in *pb.CreateDriveRequest) (*pb.CreateDriveResponse, error) {
-	return nil, nil
+
+	// TODO Verify auth
+
+	rsp, err := s.Service.CreateDrive(ctx, in.UserId)
+
+	if err != nil {
+		return nil, status.Error(codes.Internal, err.Error())
+	}
+	response := &pb.CreateDriveResponse{DriveId: rsp}
+
+	return response, nil
 }
+
 func (s *Server) CreateNewFolder(context.Context, *pb.CreateNewFolderRequest) (*pb.CreateNewFolderResponse, error) {
 	return nil, nil
 }
