@@ -30,10 +30,31 @@ func (s *Server) CreateDrive(ctx context.Context, in *pb.CreateDriveRequest) (*p
 	return response, nil
 }
 
-func (s *Server) CreateNewFolder(context.Context, *pb.CreateNewFolderRequest) (*pb.CreateNewFolderResponse, error) {
-	return nil, nil
+func (s *Server) CreateNewFolder(ctx context.Context, in *pb.CreateNewFolderRequest) (*pb.CreateNewFolderResponse, error) {
+	folder := in.GetFolder()
+	if folder.GetName() == "" {
+		return nil, status.Error(codes.InvalidArgument, "folder name is invalid")
+	}
+	if folder.GetParentIdentifier() == "" {
+		return nil, status.Error(codes.InvalidArgument, "destination folder is invalid")
+	}
+	folderID, err := s.Service.CreateNewFolder(ctx, in.GetUserId(), folder.GetName(), folder.GetParentIdentifier())
+	if err != nil {
+		return nil, err
+	}
+	rsp := &pb.CreateNewFolderResponse{
+		ResponseCode:    codes.OK.String(),
+		ResponseMessage: "Folder created with success.",
+		FolderId:        folderID,
+	}
+	return rsp, nil
 }
 func (s *Server) CreateNewFile(ctx context.Context, in *pb.CreateNewFileRequest) (*pb.CreateNewFileResponse, error) {
+	file := in.File
+	if file.Content == nil {
+		return nil, status.Error(codes.InvalidArgument, "File content can't be nil")
+	}
+
 	return nil, nil
 }
 func (s *Server) GetFolderContent(ctx context.Context, in *pb.GetFolderContentRequest) (*pb.GetFolderContentResponse, error) {
@@ -60,9 +81,9 @@ func (s *Server) MoveFile(ctx context.Context, in *pb.MoveFileRequest) (*pb.Uplo
 func (s *Server) UploadFile(ctx context.Context, in *pb.UploadFileRequest) (*pb.UploadFileResponse, error) {
 	return nil, nil
 }
-func (s *Server) ShareFile(context.Context, *pb.ShareFileRequest) (*pb.ShareFileResponse, error) {
+func (s *Server) ShareFile(ctx context.Context, in *pb.ShareFileRequest) (*pb.ShareFileResponse, error) {
 	return nil, nil
 }
-func (s *Server) DownloadFile(context.Context, *pb.DownloadFileRequest) (*pb.DownloadFileResponse, error) {
+func (s *Server) DownloadFile(ctx context.Context, in *pb.DownloadFileRequest) (*pb.DownloadFileResponse, error) {
 	return nil, nil
 }

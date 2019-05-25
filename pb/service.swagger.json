@@ -58,6 +58,12 @@
             "in": "query",
             "required": false,
             "type": "string"
+          },
+          {
+            "name": "user_id",
+            "in": "query",
+            "required": false,
+            "type": "string"
           }
         ],
         "tags": [
@@ -79,6 +85,12 @@
         "parameters": [
           {
             "name": "identifier",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "user_id",
             "in": "query",
             "required": false,
             "type": "string"
@@ -314,6 +326,12 @@
             "in": "query",
             "required": false,
             "type": "string"
+          },
+          {
+            "name": "user_id",
+            "in": "query",
+            "required": false,
+            "type": "string"
           }
         ],
         "tags": [
@@ -361,8 +379,7 @@
       "type": "object",
       "properties": {
         "response_code": {
-          "type": "integer",
-          "format": "int32"
+          "type": "string"
         },
         "response_message": {
           "type": "string"
@@ -378,7 +395,11 @@
         "file": {
           "$ref": "#/definitions/file_serviceFile"
         },
-        "destination": {
+        "secret_phrase": {
+          "type": "string",
+          "format": "byte"
+        },
+        "user_id": {
           "type": "string"
         }
       }
@@ -387,8 +408,7 @@
       "type": "object",
       "properties": {
         "response_code": {
-          "type": "integer",
-          "format": "int32"
+          "type": "string"
         },
         "response_message": {
           "type": "string"
@@ -401,10 +421,10 @@
     "file_serviceCreateNewFolderRequest": {
       "type": "object",
       "properties": {
-        "file": {
-          "$ref": "#/definitions/file_serviceFile"
+        "folder": {
+          "$ref": "#/definitions/file_serviceFolder"
         },
-        "destination": {
+        "user_id": {
           "type": "string"
         }
       }
@@ -413,13 +433,12 @@
       "type": "object",
       "properties": {
         "response_code": {
-          "type": "integer",
-          "format": "int32"
+          "type": "string"
         },
         "response_message": {
           "type": "string"
         },
-        "file_id": {
+        "folder_id": {
           "type": "string"
         }
       }
@@ -429,6 +448,9 @@
       "properties": {
         "identifier": {
           "type": "string"
+        },
+        "user_id": {
+          "type": "string"
         }
       }
     },
@@ -436,8 +458,7 @@
       "type": "object",
       "properties": {
         "response_code": {
-          "type": "integer",
-          "format": "int32"
+          "type": "string"
         },
         "response_message": {
           "type": "string"
@@ -576,8 +597,7 @@
       "type": "object",
       "properties": {
         "response_code": {
-          "type": "integer",
-          "format": "int32"
+          "type": "string"
         },
         "response_message": {
           "type": "string"
@@ -591,8 +611,7 @@
       "type": "object",
       "properties": {
         "response_code": {
-          "type": "integer",
-          "format": "int32"
+          "type": "string"
         },
         "response_message": {
           "type": "string"
@@ -606,8 +625,7 @@
       "type": "object",
       "properties": {
         "response_code": {
-          "type": "integer",
-          "format": "int32"
+          "type": "string"
         },
         "response_message": {
           "type": "string"
@@ -625,6 +643,9 @@
         },
         "destination": {
           "type": "string"
+        },
+        "user_id": {
+          "type": "string"
         }
       }
     },
@@ -636,6 +657,9 @@
         },
         "name": {
           "type": "string"
+        },
+        "user_id": {
+          "type": "string"
         }
       }
     },
@@ -643,8 +667,7 @@
       "type": "object",
       "properties": {
         "response_code": {
-          "type": "integer",
-          "format": "int32"
+          "type": "string"
         },
         "response_message": {
           "type": "string"
@@ -686,6 +709,9 @@
         "new_content": {
           "type": "string",
           "format": "byte"
+        },
+        "user_id": {
+          "type": "string"
         }
       }
     },
@@ -693,8 +719,7 @@
       "type": "object",
       "properties": {
         "response_code": {
-          "type": "integer",
-          "format": "int32"
+          "type": "string"
         },
         "response_message": {
           "type": "string"
@@ -707,8 +732,16 @@
         "file": {
           "$ref": "#/definitions/file_serviceFile"
         },
-        "destination": {
+        "user_id": {
           "type": "string"
+        },
+        "secret_phrase": {
+          "type": "string",
+          "format": "byte"
+        },
+        "encoded_phrase": {
+          "type": "string",
+          "format": "byte"
         }
       }
     },
@@ -716,8 +749,7 @@
       "type": "object",
       "properties": {
         "response_code": {
-          "type": "integer",
-          "format": "int32"
+          "type": "string"
         },
         "response_message": {
           "type": "string"

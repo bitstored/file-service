@@ -121,90 +121,100 @@ message CreateDriveRequest {
     string user_id = 1;
 }
 message CreateDriveResponse {
-    int32 response_code = 1;
+    string response_code = 1;
 	string response_message = 2;
 	string drive_id = 3;
 }
 message UploadFileRequest {
     File file = 1;
-    string destination = 3;
+    string user_id = 4;
+	bytes secret_phrase = 2;
+	bytes encoded_phrase = 3;
 }
 message UploadFileResponse {
-    int32 response_code = 1;
+    string response_code = 1;
 	string response_message = 2;
 	string file_id = 3;
 }
 message CreateNewFileRequest {
     File file = 1;
-    string destination = 2;
+    bytes secret_phrase = 2;
+    string user_id = 3;
 }
 message CreateNewFileResponse {
-    int32 response_code = 1;
+    string response_code = 1;
 	string response_message = 2;
 	string file_id = 3;
 }
 message CreateNewFolderRequest {
-    File file = 1;
-    string destination = 2;
+    Folder folder = 1;
+    string user_id = 2;
 }
 message CreateNewFolderResponse {
-    int32 response_code = 1;
+    string response_code = 1;
 	string response_message = 2;
-	string file_id = 3;
+	string folder_id = 3;
 }
 message DeleteFileRequest {
     string identifier = 1;
+    string user_id = 2;
 }
 message DeleteFileResponse {
-    int32 response_code = 1;
+    string response_code = 1;
     string response_message = 2;
 }
 message RenameFileRequest {
     string identifier = 1;
     string name = 2;
+    string user_id = 3;
 }
 message RenameFileResponse {
-    int32 response_code = 1;
+    string response_code = 1;
     string response_message = 2;
 }
 message MoveFileRequest {
     string identifier = 1;
     string destination = 2;
+    string user_id = 3;
 }
 message MoveFileResponse {
-    int32 response_code = 1;
+    string response_code = 1;
     string response_message = 2;
 }
 message GetFolderContentRequest {
     string identifier = 1;
+    string user_id = 2;
 }
 message GetFolderContentResponse {
-    int32 response_code = 1;
+    string response_code = 1;
     string response_message = 2;
     FSLevel content = 3;
 }
 message GetFileContentRequest {
     string identifier = 1;
+    string user_id = 2;
 }
 message GetFileContentResponse {
-    int32 response_code = 1;
+    string response_code = 1;
     string response_message = 2;
     File file = 3;
 }
 message GetFileTreeRequest {
     string root_identifier = 1;
+    string user_id = 2;
 }
 message GetFileTreeResponse {
-    int32 response_code = 1;
+    string response_code = 1;
     string response_message = 2;
     FSTree tree = 3;
 }
 message UpdateFileContentRequest {
     string identifier = 1;
     bytes new_content = 2;
+    string user_id = 3;
 }
 message UpdateFileContentResponse {
-    int32 response_code = 1;
+    string response_code = 1;
     string response_message = 2;
 }
 message ShareFileRequest {
