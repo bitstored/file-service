@@ -94,6 +94,28 @@
             "in": "query",
             "required": false,
             "type": "string"
+          },
+          {
+            "name": "secret_key",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "byte"
+          },
+          {
+            "name": "type",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "OTHER",
+              "DOC",
+              "PDF",
+              "TXT",
+              "EXCEL",
+              "IMAGE"
+            ],
+            "default": "OTHER"
           }
         ],
         "tags": [
@@ -186,7 +208,7 @@
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/file_serviceUploadFileResponse"
+              "$ref": "#/definitions/file_serviceMoveFileResponse"
             }
           }
         },
@@ -470,6 +492,27 @@
       "properties": {
         "identifier": {
           "type": "string"
+        },
+        "user_id": {
+          "type": "string"
+        },
+        "source_id": {
+          "type": "string"
+        },
+        "secret_phrase": {
+          "type": "string",
+          "format": "byte"
+        },
+        "watermark_image": {
+          "type": "string",
+          "format": "byte"
+        },
+        "watermark_message": {
+          "type": "string"
+        },
+        "stegano_message": {
+          "type": "string",
+          "format": "byte"
         }
       }
     },
@@ -477,8 +520,7 @@
       "type": "object",
       "properties": {
         "response_code": {
-          "type": "integer",
-          "format": "int32"
+          "type": "string"
         },
         "response_message": {
           "type": "string"
@@ -548,7 +590,7 @@
           "type": "string"
         },
         "file_type": {
-          "$ref": "#/definitions/file_serviceFileType"
+          "$ref": "#/definitions/file_serviceType"
         },
         "writable": {
           "type": "boolean",
@@ -563,18 +605,6 @@
           "format": "byte"
         }
       }
-    },
-    "file_serviceFileType": {
-      "type": "string",
-      "enum": [
-        "OTHER",
-        "DOC",
-        "PDF",
-        "TXT",
-        "EXCEL",
-        "IMAGE"
-      ],
-      "default": "OTHER"
     },
     "file_serviceFolder": {
       "type": "object",
@@ -644,7 +674,25 @@
         "destination": {
           "type": "string"
         },
+        "source": {
+          "type": "string"
+        },
         "user_id": {
+          "type": "string"
+        },
+        "copy": {
+          "type": "boolean",
+          "format": "boolean"
+        }
+      }
+    },
+    "file_serviceMoveFileResponse": {
+      "type": "object",
+      "properties": {
+        "response_code": {
+          "type": "string"
+        },
+        "response_message": {
           "type": "string"
         }
       }
@@ -692,13 +740,24 @@
       "type": "object",
       "properties": {
         "response_code": {
-          "type": "integer",
-          "format": "int32"
+          "type": "string"
         },
         "response_message": {
           "type": "string"
         }
       }
+    },
+    "file_serviceType": {
+      "type": "string",
+      "enum": [
+        "OTHER",
+        "DOC",
+        "PDF",
+        "TXT",
+        "EXCEL",
+        "IMAGE"
+      ],
+      "default": "OTHER"
     },
     "file_serviceUpdateFileContentRequest": {
       "type": "object",
@@ -712,6 +771,13 @@
         },
         "user_id": {
           "type": "string"
+        },
+        "file_type": {
+          "$ref": "#/definitions/file_serviceType"
+        },
+        "secret_key": {
+          "type": "string",
+          "format": "byte"
         }
       }
     },
@@ -756,6 +822,10 @@
         },
         "file_id": {
           "type": "string"
+        },
+        "watermark_message": {
+          "type": "string",
+          "format": "byte"
         }
       }
     }

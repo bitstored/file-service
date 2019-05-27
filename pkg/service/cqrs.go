@@ -4,15 +4,14 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/bitstored/file-service/pkg/service/events"
-
 	"github.com/bitstored/file-service/pkg/service/commands"
+	"github.com/bitstored/file-service/pkg/service/events"
 )
 
 func (s *Service) LaunchCommand(ctx context.Context, command interface{}) interface{} {
 
 	switch command.(type) {
-	case commands.CreateDrive:
+	case *commands.CreateDrive:
 		{
 			cdCommand := command.(*commands.CreateDrive)
 			if !cdCommand.IsValid() {
@@ -25,7 +24,7 @@ func (s *Service) LaunchCommand(ctx context.Context, command interface{}) interf
 
 			return <-channel
 		}
-	case commands.CreateNewFile:
+	case *commands.CreateNewFile:
 		{
 			cfCommand := command.(*commands.CreateNewFile)
 			if !cfCommand.IsValid() {
@@ -38,7 +37,7 @@ func (s *Service) LaunchCommand(ctx context.Context, command interface{}) interf
 
 			return <-channel
 		}
-	case commands.CreateNewFolder:
+	case *commands.CreateNewFolder:
 		{
 			cfCommand := command.(*commands.CreateNewFolder)
 			if !cfCommand.IsValid() {
@@ -51,7 +50,7 @@ func (s *Service) LaunchCommand(ctx context.Context, command interface{}) interf
 
 			return <-channel
 		}
-	case commands.UpdateFileContent:
+	case *commands.UpdateFileContent:
 		{
 			cfCommand := command.(*commands.UpdateFileContent)
 			if !cfCommand.IsValid() {
@@ -64,7 +63,7 @@ func (s *Service) LaunchCommand(ctx context.Context, command interface{}) interf
 
 			return <-channel
 		}
-	case commands.DeleteFile:
+	case *commands.DeleteFile:
 		{
 			cfCommand := command.(*commands.DeleteFile)
 			if !cfCommand.IsValid() {
@@ -77,7 +76,7 @@ func (s *Service) LaunchCommand(ctx context.Context, command interface{}) interf
 
 			return <-channel
 		}
-	case commands.RenameFile:
+	case *commands.RenameFile:
 		{
 			cfCommand := command.(*commands.RenameFile)
 			if !cfCommand.IsValid() {
@@ -90,7 +89,7 @@ func (s *Service) LaunchCommand(ctx context.Context, command interface{}) interf
 
 			return <-channel
 		}
-	case commands.MoveFile:
+	case *commands.MoveFile:
 		{
 			cfCommand := command.(*commands.MoveFile)
 			if !cfCommand.IsValid() {
@@ -103,7 +102,7 @@ func (s *Service) LaunchCommand(ctx context.Context, command interface{}) interf
 
 			return <-channel
 		}
-	case commands.UploadFile:
+	case *commands.UploadFile:
 		{
 			cfCommand := command.(*commands.UploadFile)
 			if !cfCommand.IsValid() {
@@ -116,7 +115,7 @@ func (s *Service) LaunchCommand(ctx context.Context, command interface{}) interf
 
 			return <-channel
 		}
-	case commands.DownloadFile:
+	case *commands.DownloadFile:
 		{
 			cfCommand := command.(*commands.DownloadFile)
 			if !cfCommand.IsValid() {
@@ -130,7 +129,7 @@ func (s *Service) LaunchCommand(ctx context.Context, command interface{}) interf
 			return <-channel
 		}
 	default:
-		return events.Failed{Error: fmt.Errorf("Unknown command type")}
+		return &events.Failed{Error: fmt.Errorf("Unknown command type")}
 	}
 }
 

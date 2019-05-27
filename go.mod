@@ -8,6 +8,7 @@ require (
 	github.com/bitstored/crypto-service v0.0.0-20190513000356-56607a8400a8
 	github.com/bitstored/repository v0.0.0-20190322203258-7411f740d8b1
 	github.com/bitstored/watermarking-service v0.0.0-20190525122923-b1445870fe51
+	github.com/cenkalti/backoff v2.1.1+incompatible
 	github.com/couchbase/gocb v1.6.1
 	github.com/dgryski/go-sip13 v0.0.0-20190329191031-25c5027a8c7b // indirect
 	github.com/fogleman/gg v1.3.0 // indirect
@@ -15,10 +16,11 @@ require (
 	github.com/golang/protobuf v1.3.1
 	github.com/google/go-cmp v0.3.0 // indirect
 	github.com/google/pprof v0.0.0-20190515194954-54271f7e092f // indirect
+	github.com/grpc-ecosystem/go-grpc-prometheus v1.2.0
 	github.com/grpc-ecosystem/grpc-gateway v1.9.0
 	github.com/jung-kurt/gofpdf v1.4.2 // indirect
 	github.com/karrick/godirwalk v1.8.0 // indirect
-	github.com/prometheus/client_golang v0.9.3 // indirect
+	github.com/prometheus/client_golang v0.9.3
 	github.com/prometheus/common v0.4.1 // indirect
 	github.com/prometheus/procfs v0.0.0-20190523193104-a7aeb8df3389 // indirect
 	github.com/prometheus/tsdb v0.8.0 // indirect

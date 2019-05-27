@@ -7,6 +7,7 @@ import (
 
 	"github.com/bitstored/file-service/pb"
 	"github.com/bitstored/file-service/pkg/service"
+	"github.com/stretchr/testify/require"
 )
 
 func TestNewServer(t *testing.T) {
@@ -18,7 +19,16 @@ func TestNewServer(t *testing.T) {
 		args args
 		want *Server
 	}{
-		// TODO: Add test cases.
+		{
+			"Nil service",
+			args{nil},
+			&Server{nil},
+		},
+		{
+			"Good service",
+			args{&service.Service{}},
+			&Server{&service.Service{}},
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -44,7 +54,19 @@ func TestServer_CreateDrive(t *testing.T) {
 		want    *pb.CreateDriveResponse
 		wantErr bool
 	}{
-		// TODO: Add test cases.
+		{
+			name: "create ok",
+			fields: fields{
+				Service: service.NewService(),
+			},
+			args: args{
+				ctx: context.TODO(),
+				in: &pb.CreateDriveRequest{
+					UserId: "uid:dianaaremere",
+				},
+			},
+			wantErr: false,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -56,9 +78,7 @@ func TestServer_CreateDrive(t *testing.T) {
 				t.Errorf("Server.CreateDrive() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
-			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("Server.CreateDrive() = %v, want %v", got, tt.want)
-			}
+			require.NotEmpty(t, got.GetDriveId())
 		})
 	}
 }

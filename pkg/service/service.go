@@ -92,13 +92,21 @@ func (s *Service) CreateNewFolder(ctx context.Context, userID, folderName, paren
 	return event.FolderID, nil
 }
 
-func (s *Service) UpdateFileContent(ctx context.Context, userID, fileID, fileType string, secretKey, content []byte) error {
+func (s *Service) UpdateFileContent(ctx context.Context, userID, fileID string, fileType pb.Type, secretKey, content []byte) error {
 	command := new(commands.UpdateFileContent)
 	command.UserID = userID
 	if content == nil {
 		return fmt.Errorf("File content can't be nil")
 	}
-	compressed, err := s.compress(ctx, fileType, content)
+	var fType string
+	if fileType == pb.Type_IMAGE {
+		fType = "PNG"
+	} else if fileType == pb.Type_PDF {
+		fType = "PDF"
+	} else {
+		fType = "TXT"
+	}
+	compressed, err := s.compress(ctx, fType, content)
 	if err != nil {
 		return err
 	}
@@ -178,7 +186,7 @@ func (s *Service) UploadFile(ctx context.Context, userID, fileName, parentID, fi
 	return event.FileID, msg, nil
 }
 
-func (s *Service) DownloadFile(ctx context.Context, userID, fileID string, secretKey []byte, watermarkingPhrase string, steganographyPhrase string, watermarkingImage []byte) (*pb.File, error) {
+func (s *Service) DownloadFile(ctx context.Context, userID, fileID string, secretKey []byte, watermarkingPhrase string, steganographyPhrase []byte, watermarkingImage []byte) (*pb.File, error) {
 	command := new(commands.DownloadFile)
 	command.UserID = userID
 	command.FileID = fileID
@@ -198,8 +206,8 @@ func (s *Service) DownloadFile(ctx context.Context, userID, fileID string, secre
 	file := new(pb.File)
 	file.Name = event.Name
 	file.CreationDate = event.CreationDate
-	file.FileType = pb.File_OTHER
-	if event.Writable {
+	file.FileType = pb.Type_OTHER
+	if event.Writable && event.FileType == "PNG" {
 		if watermarkingImage != nil {
 			content, err = s.watermarkWithImage(ctx, content, watermarkingImage)
 		}
@@ -207,10 +215,75 @@ func (s *Service) DownloadFile(ctx context.Context, userID, fileID string, secre
 			content, err = s.watermarkWithText(ctx, content, watermarkingPhrase)
 		}
 	}
-	if event.Private {
-
+	if event.Private && event.FileType == "PNG" {
+		content, err = s.encodeMessage(ctx, content, steganographyPhrase)
 	}
 	return file, nil
+}
+
+func (s *Service) GetFileContent(ctx context.Context, userID, fileID string, fileType pb.Type, secretKey []byte) (*pb.File, error) {
+	cont, err := s.Repo.GetFileContent(ctx, userID, fileID)
+	if err != nil {
+		return nil, fmt.Errorf("Could not find the file")
+	}
+	content := cont.Data
+	content, err = s.decrypt(ctx, content, secretKey, userID)
+	if err != nil {
+		return nil, fmt.Errorf("Could not decrypt the content")
+	}
+	var fType string
+	if fileType == pb.Type_IMAGE {
+		fType = "PNG"
+	} else if fileType == pb.Type_PDF {
+		fType = "PDF"
+	} else {
+		fType = "TXT"
+	}
+	content, err = s.decompress(ctx, fType, content)
+	if err != nil {
+		return nil, fmt.Errorf("Could not decompress the content")
+	}
+
+	file := new(pb.File)
+	file.Content = content
+	file.FileType = pb.Type_OTHER
+
+	return file, nil
+}
+
+func (s *Service) GetFolderContent(ctx context.Context, userID, folderID string) (*pb.FSLevel, error) {
+	cont, err := s.Repo.GetFolderContent(ctx, userID, folderID)
+	if err != nil {
+		return nil, fmt.Errorf("Could not find the file")
+	}
+	fsLevel := new(pb.FSLevel)
+	for _, fr := range cont.Folders {
+		fp := new(pb.Folder)
+		fp.CreationDate = fr.Created
+		fp.Identifier = fr.ID
+		fp.Name = fr.Name
+		fp.ParentIdentifier = folderID
+		fsLevel.Folders = append(fsLevel.Folders, fp)
+	}
+	for _, fr := range cont.Files {
+		fp := new(pb.File)
+		fp.CreationDate = fr.Created
+		fp.Identifier = fr.ID
+		fp.Name = fr.Name
+		fp.Content = []byte("unknown")
+		if fr.Type == "PNG" {
+			fp.FileType = pb.Type_IMAGE
+		} else if fr.Type == "PDF" {
+			fp.FileType = pb.Type_PDF
+		} else {
+			fp.FileType = pb.Type_TXT
+		}
+		fp.Private = fr.IsPrivate
+		fp.Writable = fr.IsWritable
+		fp.ParentIdentifier = folderID
+		fsLevel.Files = append(fsLevel.Files, fp)
+	}
+	return fsLevel, nil
 }
 
 func (s *Service) encodeMessage(ctx context.Context, target []byte, message []byte) ([]byte, error) {
