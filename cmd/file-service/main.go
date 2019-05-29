@@ -15,9 +15,12 @@ import (
 	"github.com/bitstored/file-service/pb"
 	"github.com/bitstored/file-service/pkg/server"
 	"github.com/bitstored/file-service/pkg/service"
+
 	"github.com/cenkalti/backoff"
-	grpc_prometheus "github.com/grpc-ecosystem/go-grpc-prometheus"
 	"github.com/prometheus/client_golang/prometheus"
+	// grpc_middleware "github.com/grpc-ecosystem/go-grpc-middleware"
+	// grpc_auth "github.com/grpc-ecosystem/go-grpc-middleware/auth"
+	grpc_prometheus "github.com/grpc-ecosystem/go-grpc-prometheus"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"

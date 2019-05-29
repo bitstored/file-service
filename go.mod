@@ -22,7 +22,7 @@ require (
 	github.com/karrick/godirwalk v1.8.0 // indirect
 	github.com/prometheus/client_golang v0.9.3
 	github.com/prometheus/common v0.4.1 // indirect
-	github.com/prometheus/procfs v0.0.0-20190523193104-a7aeb8df3389 // indirect
+	github.com/prometheus/procfs v0.0.0-20190528151240-3cb620ac02d0 // indirect
 	github.com/prometheus/tsdb v0.8.0 // indirect
 	github.com/remyoudompheng/bigfft v0.0.0-20190512091148-babf20351dd7 // indirect
 	github.com/rogpeppe/fastuuid v1.1.0 // indirect
