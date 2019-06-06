@@ -17,10 +17,8 @@ import (
 	"github.com/bitstored/file-service/pkg/service"
 
 	"github.com/cenkalti/backoff"
-	"github.com/prometheus/client_golang/prometheus"
-	// grpc_middleware "github.com/grpc-ecosystem/go-grpc-middleware"
-	// grpc_auth "github.com/grpc-ecosystem/go-grpc-middleware/auth"
 	grpc_prometheus "github.com/grpc-ecosystem/go-grpc-prometheus"
+	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
@@ -60,7 +58,7 @@ func main() {
 
 	gRPCServer := grpc.NewServer()
 
-	pb.RegisterFileManagementService(gRPCServer, devServer)
+	pb.RegisterFileManagementServer(gRPCServer, devServer)
 	reflection.Register(gRPCServer)
 	grpc_prometheus.Register(gRPCServer)
 	grpcMetrics.InitializeMetrics(gRPCServer)
