@@ -79,8 +79,32 @@ service FileManagement {
             post: "/files/api/v1/file/download"
             body: "*"
         };
+    } 
+    rpc ComputeSize(ComputeSizeRequest) returns (ComputeSizeResponse) {
+		option (google.api.http) = {
+            get: "/files/api/v1/file/size"
+        };
+    } 
+    rpc GetMyDriveId(GetMyDriveIdRequest) returns (GetMyDriveIdResponse) {
+		option (google.api.http) = {
+            post: "/files/api/v1/drive/id"
+            body: "*"
+        };
 	} 
 		// TODO add methods for shared files
+}
+message GetMyDriveIdRequest {
+    string user_id = 1;
+}
+message GetMyDriveIdResponse {
+    string drive_id = 1;
+}
+message ComputeSizeRequest {
+    string user_id = 1;
+}
+message ComputeSizeResponse {
+    int64 initial_size = 1;
+    int64 compressed_size = 2;
 }
 enum Type {
     OTHER = 0;
@@ -115,6 +139,8 @@ message File {
     bool writable = 7;
     bool private = 8; // should be watermarked 
     bytes content = 9;
+    int64 init_size = 10;
+    int64 compressed_size = 11;
 }
 message CreateDriveRequest {
     string user_id = 1;

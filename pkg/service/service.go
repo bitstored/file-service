@@ -69,6 +69,8 @@ func (s *Service) CreateNewFile(ctx context.Context, userID, fileName, parentID,
 	command.Writable = writable
 	command.Private = private
 	command.Content = encrypted
+	command.InitialSize = int64(len(content))
+	command.CompressedSize = int64(len(encrypted))
 
 	event := s.LaunchCommand(ctx, command).(*events.NewFileCreated)
 
@@ -284,6 +286,14 @@ func (s *Service) GetFolderContent(ctx context.Context, userID, folderID string)
 		fsLevel.Files = append(fsLevel.Files, fp)
 	}
 	return fsLevel, nil
+}
+
+func (s *Service) ComputeSize(ctx context.Context, userID string) (int64, int64, error) {
+	return s.Repo.ComputeSize(ctx, userID)
+}
+
+func (s *Service) GetMyDriveId(ctx context.Context, userID string) (string, error) {
+	return s.Repo.GetMyDriveId(ctx, userID)
 }
 
 func (s *Service) encodeMessage(ctx context.Context, target []byte, message []byte) ([]byte, error) {

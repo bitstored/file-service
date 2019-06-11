@@ -10,15 +10,17 @@ type Folder struct {
 }
 
 type File struct {
-	ID         string
-	ParentID   string
-	OwnerID    string
-	Name       string
-	Created    string
-	Type       string
-	IsWritable bool
-	IsPrivate  bool
-	ContentID  string
+	ID             string
+	ParentID       string
+	OwnerID        string
+	Name           string
+	Created        string
+	Type           string
+	IsWritable     bool
+	IsPrivate      bool
+	ContentID      string
+	InitialSize    int64
+	CompressedSize int64
 }
 
 type Content struct {
@@ -39,12 +41,17 @@ type FSLevelDetailed struct {
 }
 
 type EncriptionKey struct {
+	FileID   string
 	Key      string
 	EntityID string
 }
 
 type SharedFile struct {
-	ID        string
-	OwnerID   string
+	ID       string
+	OwnerID  string
 	TargetID string
+}
+
+type UserData struct {
+	DriveID string
 }

@@ -147,7 +147,9 @@ func (s *Service) createNewFile(ctx context.Context, command *commands.CreateNew
 		command.FileType,
 		command.Writable,
 		command.Private,
-		command.Content)
+		command.Content,
+		command.InitialSize,
+		command.CompressedSize)
 	event := events.NewFileCreated{FileID: string(rsp), UserID: command.UserID, Error: err}
 	c <- &event
 }

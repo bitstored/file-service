@@ -344,6 +344,7 @@ gopkg.in/couchbase/gocbcore.v7 v7.1.13/go.mod h1:48d2Be0MxRtsyuvn+mWzqmoGUG9uA00
 gopkg.in/couchbaselabs/gocb.v0 v0.9.0/go.mod h1:IwV91xx2f8IRp0ToaSp7+QoYqo9843ZSh/Wgrw4Fheg=
 gopkg.in/couchbaselabs/gocbconnstr.v1 v1.0.2 h1:EJFMMmmXe0pF+AdSYdwQ050BVJHwpLmsEMTQoUAEFv8=
 gopkg.in/couchbaselabs/gocbconnstr.v1 v1.0.2/go.mod h1:ZjII0iKx4Veo6N6da+pEZu/ptNyKLg9QTVt7fFmR6sw=
+gopkg.in/couchbaselabs/gojcbmock.v1 v1.0.3 h1:7n5tht07rEuogME6fmi6FVglIAUFD8m4t8ZQbnUq0sA=
 gopkg.in/couchbaselabs/gojcbmock.v1 v1.0.3/go.mod h1:jl/gd/aQ2S8whKVSTnsPs6n7BPeaAuw9UglBD/OF7eo=
 gopkg.in/couchbaselabs/jsonx.v1 v1.0.0 h1:SJGarb8dXAsVZWizC26rxBkBYEKhSUxVh5wAnyzBVaI=
 gopkg.in/couchbaselabs/jsonx.v1 v1.0.0/go.mod h1:oR201IRovxvLW/eISevH12/+MiKHtNQAKfcX8iWZvJY=

@@ -41,6 +41,32 @@
         ]
       }
     },
+    "/files/api/v1/drive/id": {
+      "post": {
+        "operationId": "GetMyDriveId",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/file_serviceGetMyDriveIdResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/file_serviceGetMyDriveIdRequest"
+            }
+          }
+        ],
+        "tags": [
+          "FileManagement"
+        ]
+      }
+    },
     "/files/api/v1/drive/tree": {
       "get": {
         "operationId": "GetFileTree",
@@ -279,6 +305,30 @@
         ]
       }
     },
+    "/files/api/v1/file/size": {
+      "get": {
+        "operationId": "ComputeSize",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/file_serviceComputeSizeResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "FileManagement"
+        ]
+      }
+    },
     "/files/api/v1/file/update": {
       "post": {
         "operationId": "UpdateFileContent",
@@ -389,6 +439,19 @@
     }
   },
   "definitions": {
+    "file_serviceComputeSizeResponse": {
+      "type": "object",
+      "properties": {
+        "initial_size": {
+          "type": "string",
+          "format": "int64"
+        },
+        "compressed_size": {
+          "type": "string",
+          "format": "int64"
+        }
+      }
+    },
     "file_serviceCreateDriveRequest": {
       "type": "object",
       "properties": {
@@ -603,6 +666,14 @@
         "content": {
           "type": "string",
           "format": "byte"
+        },
+        "init_size": {
+          "type": "string",
+          "format": "int64"
+        },
+        "compressed_size": {
+          "type": "string",
+          "format": "int64"
         }
       }
     },
@@ -662,6 +733,22 @@
         },
         "content": {
           "$ref": "#/definitions/file_serviceFSLevel"
+        }
+      }
+    },
+    "file_serviceGetMyDriveIdRequest": {
+      "type": "object",
+      "properties": {
+        "user_id": {
+          "type": "string"
+        }
+      }
+    },
+    "file_serviceGetMyDriveIdResponse": {
+      "type": "object",
+      "properties": {
+        "drive_id": {
+          "type": "string"
         }
       }
     },

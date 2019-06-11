@@ -9,14 +9,16 @@ func (c CreateDrive) IsValid() bool {
 }
 
 type CreateNewFile struct {
-	UserID       string
-	ParentID     string
-	CreationDate string
-	Name         string
-	FileType     string
-	Writable     bool
-	Private      bool
-	Content      []byte
+	UserID         string
+	ParentID       string
+	CreationDate   string
+	Name           string
+	FileType       string
+	Writable       bool
+	Private        bool
+	Content        []byte
+	InitialSize    int64
+	CompressedSize int64
 }
 
 func (c CreateNewFile) IsValid() bool {

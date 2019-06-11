@@ -348,3 +348,26 @@ func (s *Server) DownloadFile(ctx context.Context, in *pb.DownloadFileRequest) (
 	rsp.ResponseMessage = "File downloaded"
 	return rsp, nil
 }
+
+func (s *Server) ComputeSize(ctx context.Context, in *pb.ComputeSizeRequest) (*pb.ComputeSizeResponse, error) {
+	iSize, cSize, err := s.Service.ComputeSize(ctx, in.UserId)
+	if err != nil {
+		return nil, status.Error(codes.Internal, err.Error())
+	}
+	rsp := &pb.ComputeSizeResponse{
+		InitialSize:    iSize,
+		CompressedSize: cSize,
+	}
+	return rsp, nil
+}
+
+func (s *Server) GetMyDriveId(ctx context.Context, in *pb.GetMyDriveIdRequest) (*pb.GetMyDriveIdResponse, error) {
+	id, err := s.Service.GetMyDriveId(ctx, in.GetUserId())
+	if err != nil {
+		return nil, status.Error(codes.Internal, err.Error())
+	}
+	rsp := &pb.GetMyDriveIdResponse{
+		DriveId: id,
+	}
+	return rsp, nil
+}

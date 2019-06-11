@@ -7,6 +7,7 @@ require (
 	github.com/bitstored/watermarking-service v0.0.0-20190527123032-aaa6c6f982c5
 	github.com/cenkalti/backoff v2.1.1+incompatible
 	github.com/couchbase/gocb v1.6.1
+	github.com/golang/glog v0.0.0-20160126235308-23def4e6c14b
 	github.com/golang/protobuf v1.3.1
 	github.com/grpc-ecosystem/go-grpc-prometheus v1.2.0
 	github.com/grpc-ecosystem/grpc-gateway v1.9.0

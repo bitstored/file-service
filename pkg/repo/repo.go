@@ -68,12 +68,75 @@ func (r *Repository) CreateDrive(ctx context.Context, userID string) (driveID Dr
 	arr := make([]string, 0)
 	level := schema.FSLevel{RootID: idValue, FilesID: arr, FoldersID: arr}
 	r.mux.Lock()
+
 	if _, err = r.next.Create(ctx, levelID+idValue, level); err != nil {
+		r.mux.Unlock()
+		return "", err
+	}
+	userData := schema.UserData{DriveID: idValue}
+	if _, err = r.next.Create(ctx, userID, userData); err != nil {
 		r.mux.Unlock()
 		return "", err
 	}
 	r.mux.Unlock()
 	return
+}
+
+func (r *Repository) ComputeSize(ctx context.Context, userID string) (int64, int64, error) {
+	data := new(schema.UserData)
+	_, err := r.next.Read(ctx, userID, data)
+	if err != nil {
+		return -1, -1, fmt.Errorf("failed to read data for user %s: %v", userID, err.Error())
+	}
+	folderID := data.DriveID
+	is, cs, err := r.computeSizes(ctx, folderID)
+	if err != nil {
+		return 0, 0, err
+	}
+	return is, cs, nil
+}
+
+func (r *Repository) computeSizes(ctx context.Context, folderID string) (int64, int64, error) {
+	level := new(schema.FSLevel)
+	_, err := r.next.Read(ctx, levelID+folderID, &level)
+	if err != nil {
+		return 0, 0, fmt.Errorf("failed to read folder content %s: %v", folderID, err.Error())
+	}
+	iSize := int64(0)
+	cSize := int64(0)
+	for _, fileID := range level.FilesID {
+		file := new(schema.File)
+		_, err = r.next.Read(ctx, fileID, file)
+		if err != nil {
+			return 0, 0, fmt.Errorf("failed to read file info %s: %v", fileID, err.Error())
+		}
+		iSize += file.InitialSize
+		cSize += file.CompressedSize
+	}
+	for _, folderID1 := range level.FoldersID {
+		folder := new(schema.Folder)
+		_, err = r.next.Read(ctx, folderID1, folder)
+		if err != nil {
+			return 0, 0, fmt.Errorf("failed to read file info %s: %v", folderID1, err.Error())
+		}
+		is, cs, err := r.computeSizes(ctx, folder.ID)
+		if err != nil {
+			return 0, 0, fmt.Errorf("failed to read file info %s: %v", folderID1, err.Error())
+		}
+		iSize += is
+		cSize += cs
+	}
+
+	return iSize, cSize, nil
+}
+
+func (r *Repository) GetMyDriveId(ctx context.Context, userID string) (string, error) {
+	data := new(schema.UserData)
+	_, err := r.next.Read(ctx, userID, data)
+	if err != nil {
+		return "", fmt.Errorf("failed to read data for user %s: %v", userID, err.Error())
+	}
+	return data.DriveID, nil
 }
 
 func (r *Repository) CreateNewFolder(ctx context.Context, userID, name, destinationID string) (folderID string, err error) {
@@ -120,7 +183,7 @@ func (r *Repository) CreateNewFolder(ctx context.Context, userID, name, destinat
 	return
 }
 
-func (r *Repository) CreateNewFile(ctx context.Context, userID string, name string, destinationID string, fileType string, writable bool, private bool, content []byte) (fileID string, err error) {
+func (r *Repository) CreateNewFile(ctx context.Context, userID string, name string, destinationID string, fileType string, writable bool, private bool, content []byte, iSize, cSize int64) (fileID string, err error) {
 	fileID, err = newID(fileIDFormat)
 	if err != nil {
 		return "", fmt.Errorf("failed to create file id")
@@ -129,15 +192,20 @@ func (r *Repository) CreateNewFile(ctx context.Context, userID string, name stri
 	if err != nil {
 		return "", fmt.Errorf("failed to create content id")
 	}
-	file := schema.File{ID: fileID,
-		ParentID:   destinationID,
-		OwnerID:    userID,
-		Name:       name,
-		Created:    time.Now().String(),
-		Type:       fileType,
-		IsWritable: writable,
-		IsPrivate:  private,
-		ContentID:  contentID}
+	file := schema.File{
+		ID:             fileID,
+		ParentID:       destinationID,
+		OwnerID:        userID,
+		Name:           name,
+		Created:        time.Now().String(),
+		Type:           fileType,
+		IsWritable:     writable,
+		IsPrivate:      private,
+		ContentID:      contentID,
+		InitialSize:    iSize,
+		CompressedSize: cSize,
+	}
+
 	contentData := schema.Content{ID: contentID,
 		Data: content}
 	var cas uint
