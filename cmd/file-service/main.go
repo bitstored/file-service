@@ -31,8 +31,8 @@ const (
 var (
 	grpcAddr = flag.String("grpc", "localhost:4005", "gRPC API address")
 	httpAddr = flag.String("http", "localhost:5005", "HTTP API address")
-	cert     = flag.String("cert", "scripts/localhost.pem", "certificate pathname")
-	certKey  = flag.String("certkey", "scripts/localhost.key", "private key pathname")
+	cert     = flag.String("cert", "scripts/server.crt", "certificate pathname")
+	certKey  = flag.String("certkey", "scripts/server.key", "private key pathname")
 )
 
 func main() {

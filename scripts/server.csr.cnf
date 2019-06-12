@@ -1,0 +1,14 @@
+[req]
+default_bits = 2048
+prompt = no
+default_md = sha256
+distinguished_name = dn
+
+[dn]
+C=RO
+ST=Cluj
+L=Cluj-Napoca
+O=Bitstored
+OU=BitstoredUsers
+emailAddress=hennessyparadise2@gmail.com
+CN = localhost
