@@ -3,6 +3,7 @@ package service
 import (
 	"context"
 	"fmt"
+	"strings"
 	"time"
 
 	"google.golang.org/grpc"
@@ -38,6 +39,7 @@ func NewService() *Service {
 // CreateDrive gets the user identifier and creates a drive associated with user, returns the drive ID
 func (s *Service) CreateDrive(ctx context.Context, userID string) (string, error) {
 	command := new(commands.CreateDrive)
+	userID = strings.ReplaceAll(userID, "\"", "")
 	command.UserID = userID
 
 	event := s.LaunchCommand(ctx, command).(*events.DriveCreated)
@@ -289,10 +291,15 @@ func (s *Service) GetFolderContent(ctx context.Context, userID, folderID string)
 }
 
 func (s *Service) ComputeSize(ctx context.Context, userID string) (int64, int64, error) {
+	userID = strings.ReplaceAll(userID, "\"", "")
+	userID = strings.ReplaceAll(userID, "\\", "")
+
 	return s.Repo.ComputeSize(ctx, userID)
 }
 
 func (s *Service) GetMyDriveId(ctx context.Context, userID string) (string, error) {
+	userID = strings.ReplaceAll(userID, "\"", "")
+	userID = strings.ReplaceAll(userID, "\\", "")
 	return s.Repo.GetMyDriveId(ctx, userID)
 }
 
