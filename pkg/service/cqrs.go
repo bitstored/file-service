@@ -207,7 +207,10 @@ func (s *Service) uploadFile(ctx context.Context, command *commands.UploadFile, 
 		command.FileType,
 		command.Writable,
 		command.Private,
-		command.Content)
+		command.Content,
+		command.InitialSize,
+		command.CompressedSize)
+
 	event := events.FileUploaded{FileID: string(rsp), UserID: command.UserID, Error: err}
 	c <- &event
 }

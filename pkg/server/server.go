@@ -2,6 +2,7 @@ package server
 
 import (
 	"context"
+	"fmt"
 	"strings"
 
 	"github.com/bitstored/file-service/pb"
@@ -59,7 +60,7 @@ func (s *Server) CreateNewFile(ctx context.Context, in *pb.CreateNewFileRequest)
 	}
 
 	var name string
-	strings.Trim(file.GetName(), name)
+	name = strings.Trim(file.GetName(), " ")
 	if name == "" {
 		return nil, status.Error(codes.InvalidArgument, "File name can't be empty")
 	}
@@ -94,12 +95,12 @@ func (s *Server) CreateNewFile(ctx context.Context, in *pb.CreateNewFileRequest)
 
 func (s *Server) GetFolderContent(ctx context.Context, in *pb.GetFolderContentRequest) (*pb.GetFolderContentResponse, error) {
 	var uid string
-	strings.Trim(in.GetUserId(), uid)
+	uid = strings.Trim(in.GetUserId(), " ")
 	if uid == "" {
 		return nil, status.Error(codes.InvalidArgument, "UserID can't be empty")
 	}
 	var fid string
-	strings.Trim(in.GetIdentifier(), fid)
+	fid = strings.Trim(in.GetIdentifier(), " ")
 	if fid == "" {
 		return nil, status.Error(codes.InvalidArgument, "FolderID can't be empty")
 	}
@@ -119,12 +120,12 @@ func (s *Server) GetFolderContent(ctx context.Context, in *pb.GetFolderContentRe
 
 func (s *Server) GetFileContent(ctx context.Context, in *pb.GetFileContentRequest) (*pb.GetFileContentResponse, error) {
 	var uid string
-	strings.Trim(in.GetUserId(), uid)
+	uid = strings.Trim(in.GetUserId(), " ")
 	if uid == "" {
 		return nil, status.Error(codes.InvalidArgument, "UserID can't be empty")
 	}
 	var fid string
-	strings.Trim(in.GetIdentifier(), fid)
+	fid = strings.Trim(in.GetIdentifier(), " ")
 	if fid == "" {
 		return nil, status.Error(codes.InvalidArgument, "FileID can't be empty")
 	}
@@ -147,12 +148,12 @@ func (s *Server) GetFileTree(ctx context.Context, in *pb.GetFileTreeRequest) (*p
 
 func (s *Server) UpdateFileContent(ctx context.Context, in *pb.UpdateFileContentRequest) (*pb.UpdateFileContentResponse, error) {
 	var uid string
-	strings.Trim(in.GetUserId(), uid)
+	uid = strings.Trim(in.GetUserId(), " ")
 	if uid == "" {
 		return nil, status.Error(codes.InvalidArgument, "UserID can't be empty")
 	}
 	var fid string
-	strings.Trim(in.GetIdentifier(), fid)
+	fid = strings.Trim(in.GetIdentifier(), " ")
 	if fid == "" {
 		return nil, status.Error(codes.InvalidArgument, "FileID can't be empty")
 	}
@@ -170,12 +171,12 @@ func (s *Server) UpdateFileContent(ctx context.Context, in *pb.UpdateFileContent
 
 func (s *Server) DeleteFile(ctx context.Context, in *pb.DeleteFileRequest) (*pb.DeleteFileResponse, error) {
 	var uid string
-	strings.Trim(in.GetUserId(), uid)
+	uid = strings.Trim(in.GetUserId(), " ")
 	if uid == "" {
 		return nil, status.Error(codes.InvalidArgument, "UserID can't be empty")
 	}
 	var fid string
-	strings.Trim(in.GetIdentifier(), fid)
+	fid = strings.Trim(in.GetIdentifier(), " ")
 	if fid == "" {
 		return nil, status.Error(codes.InvalidArgument, "FileID can't be empty")
 	}
@@ -193,17 +194,17 @@ func (s *Server) DeleteFile(ctx context.Context, in *pb.DeleteFileRequest) (*pb.
 
 func (s *Server) RenameFile(ctx context.Context, in *pb.RenameFileRequest) (*pb.RenameFileResponse, error) {
 	var uid string
-	strings.Trim(in.GetUserId(), uid)
+	uid = strings.Trim(in.GetUserId(), " ")
 	if uid == "" {
 		return nil, status.Error(codes.InvalidArgument, "UserID can't be empty")
 	}
 	var fid string
-	strings.Trim(in.GetIdentifier(), fid)
+	fid = strings.Trim(in.GetIdentifier(), " ")
 	if fid == "" {
 		return nil, status.Error(codes.InvalidArgument, "FileID can't be empty")
 	}
 	var name string
-	strings.Trim(in.GetName(), name)
+	name = strings.Trim(in.GetName(), " ")
 	if name == "" {
 		return nil, status.Error(codes.InvalidArgument, "New file name can't be empty")
 	}
@@ -221,22 +222,22 @@ func (s *Server) RenameFile(ctx context.Context, in *pb.RenameFileRequest) (*pb.
 
 func (s *Server) MoveFile(ctx context.Context, in *pb.MoveFileRequest) (*pb.MoveFileResponse, error) {
 	var uid string
-	strings.Trim(in.GetUserId(), uid)
+	uid = strings.Trim(in.GetUserId(), " ")
 	if uid == "" {
 		return nil, status.Error(codes.InvalidArgument, "UserID can't be empty")
 	}
 	var fid string
-	strings.Trim(in.GetIdentifier(), fid)
+	fid = strings.Trim(in.GetIdentifier(), " ")
 	if fid == "" {
 		return nil, status.Error(codes.InvalidArgument, "FileID can't be empty")
 	}
 	var did string
-	strings.Trim(in.GetDestination(), did)
+	did = strings.Trim(in.GetDestination(), " ")
 	if did == "" {
 		return nil, status.Error(codes.InvalidArgument, "Destination identifier can't be empty")
 	}
 	var sid string
-	strings.Trim(in.GetDestination(), sid)
+	sid = strings.Trim(in.GetSource(), " ")
 	if sid == "" {
 		return nil, status.Error(codes.InvalidArgument, "Source identifier can't be empty")
 	}
@@ -257,12 +258,12 @@ func (s *Server) UploadFile(ctx context.Context, in *pb.UploadFileRequest) (*pb.
 		return nil, status.Error(codes.InvalidArgument, "File content can't be nil")
 	}
 	var uid string
-	strings.Trim(in.GetUserId(), uid)
+	uid = strings.Trim(in.GetUserId(), " ")
 	if uid == "" {
 		return nil, status.Error(codes.InvalidArgument, "UserID can't be empty")
 	}
 	var name string
-	strings.Trim(file.GetName(), name)
+	name = strings.Trim(file.GetName(), " ")
 	if name == "" {
 		return nil, status.Error(codes.InvalidArgument, "File name can't be empty")
 	}
@@ -270,7 +271,7 @@ func (s *Server) UploadFile(ctx context.Context, in *pb.UploadFileRequest) (*pb.
 		return nil, status.Error(codes.InvalidArgument, "Secret phrase can't be empty")
 	}
 	var did string
-	strings.Trim(file.GetParentIdentifier(), did)
+	did = strings.Trim(file.GetParentIdentifier(), " ")
 	if did == "" {
 		return nil, status.Error(codes.InvalidArgument, "Parent identifier can't be empty")
 	}
@@ -307,12 +308,12 @@ func (s *Server) ShareFile(ctx context.Context, in *pb.ShareFileRequest) (*pb.Sh
 
 func (s *Server) DownloadFile(ctx context.Context, in *pb.DownloadFileRequest) (*pb.DownloadFileResponse, error) {
 	var uid string
-	strings.Trim(in.GetUserId(), uid)
+	uid = strings.Trim(in.GetUserId(), " ")
 	if uid == "" {
 		return nil, status.Error(codes.InvalidArgument, "UserID can't be empty")
 	}
 	var fid string
-	strings.Trim(in.GetIdentifier(), fid)
+	fid = strings.Trim(in.GetIdentifier(), " ")
 	if fid == "" {
 		return nil, status.Error(codes.InvalidArgument, "File identifier can't be empty")
 	}
@@ -331,16 +332,11 @@ func (s *Server) DownloadFile(ctx context.Context, in *pb.DownloadFileRequest) (
 	if len(in.GetWatermarkMessage()) != 0 {
 		watermarkMessage = in.GetWatermarkMessage()
 	}
-
-	var did string
-	strings.Trim(in.GetSourceId(), did)
-	if did == "" {
-		return nil, status.Error(codes.InvalidArgument, "Parent identifier can't be empty")
-	}
 	file, err := s.Service.DownloadFile(ctx, uid, fid, in.GetSecretPhrase(), watermarkMessage, steganoMessage, watermarkImage)
 	if err != nil {
 		return nil, status.Error(codes.Internal, err.Error())
 	}
+	fmt.Printf("%v\n\n", file)
 
 	rsp := new(pb.DownloadFileResponse)
 	rsp.File = file

@@ -100,7 +100,7 @@ func (r *Repository) computeSizes(ctx context.Context, folderID string) (int64, 
 	level := new(schema.FSLevel)
 	_, err := r.next.Read(ctx, levelID+folderID, &level)
 	if err != nil {
-		return 0, 0, fmt.Errorf("failed to read folder content %s: %v", folderID, err.Error())
+		fmt.Printf("failed to read folder content %s: %v", folderID, err.Error())
 	}
 	iSize := int64(0)
 	cSize := int64(0)
@@ -108,7 +108,7 @@ func (r *Repository) computeSizes(ctx context.Context, folderID string) (int64, 
 		file := new(schema.File)
 		_, err = r.next.Read(ctx, fileID, file)
 		if err != nil {
-			return 0, 0, fmt.Errorf("failed to read file info %s: %v", fileID, err.Error())
+			fmt.Printf("failed to read file info %s: %v", fileID, err.Error())
 		}
 		iSize += file.InitialSize
 		cSize += file.CompressedSize
@@ -117,11 +117,11 @@ func (r *Repository) computeSizes(ctx context.Context, folderID string) (int64, 
 		folder := new(schema.Folder)
 		_, err = r.next.Read(ctx, folderID1, folder)
 		if err != nil {
-			return 0, 0, fmt.Errorf("failed to read file info %s: %v", folderID1, err.Error())
+			fmt.Printf("failed to read file info %s: %v", folderID1, err.Error())
 		}
 		is, cs, err := r.computeSizes(ctx, folder.ID)
 		if err != nil {
-			return 0, 0, fmt.Errorf("failed to read file info %s: %v", folderID1, err.Error())
+			fmt.Printf("failed to read file info %s: %v", folderID1, err.Error())
 		}
 		iSize += is
 		cSize += cs
@@ -237,7 +237,7 @@ func (r *Repository) CreateNewFile(ctx context.Context, userID string, name stri
 	r.mux.Unlock()
 	return
 }
-func (r *Repository) UploadFile(ctx context.Context, userID string, name string, destinationID string, fileType string, writable bool, private bool, content []byte) (fileID string, err error) {
+func (r *Repository) UploadFile(ctx context.Context, userID string, name string, destinationID string, fileType string, writable bool, private bool, content []byte, iSize, cSize int64) (fileID string, err error) {
 	fileID, err = newID(fileIDFormat)
 	if err != nil {
 		return "", fmt.Errorf("failed to create file id")
@@ -247,14 +247,17 @@ func (r *Repository) UploadFile(ctx context.Context, userID string, name string,
 		return "", fmt.Errorf("failed to create content id")
 	}
 	file := schema.File{ID: fileID,
-		ParentID:   destinationID,
-		OwnerID:    userID,
-		Name:       name,
-		Created:    time.Now().String(),
-		Type:       fileType,
-		IsWritable: writable,
-		IsPrivate:  private,
-		ContentID:  contentID}
+		ParentID:       destinationID,
+		OwnerID:        userID,
+		Name:           name,
+		Created:        time.Now().String(),
+		Type:           fileType,
+		IsWritable:     writable,
+		IsPrivate:      private,
+		ContentID:      contentID,
+		InitialSize:    iSize,
+		CompressedSize: cSize,
+	}
 	contentData := schema.Content{ID: contentID,
 		Data: content}
 	var cas uint
@@ -304,7 +307,7 @@ func (r *Repository) GetFileContent(ctx context.Context, userID, fileID string) 
 func (r *Repository) GetFolderContent(ctx context.Context, userID, folderID string) (*schema.FSLevelDetailed, error) {
 	//levelID+
 	level := new(schema.FSLevel)
-	_, err := r.next.Read(ctx, levelID+folderID, &level)
+	_, err := r.next.Read(ctx, levelID+folderID, level)
 	if err != nil {
 		return nil, fmt.Errorf("failed to read folder content %s: %v", folderID, err.Error())
 	}
@@ -314,18 +317,16 @@ func (r *Repository) GetFolderContent(ctx context.Context, userID, folderID stri
 	for _, fileID := range level.FilesID {
 		file := new(schema.File)
 		_, err := r.next.Read(ctx, fileID, file)
-		if err != nil {
-			return nil, fmt.Errorf("failed to read file info %s: %v", fileID, err.Error())
+		if err == nil {
+			files = append(files, *file)
 		}
-		files = append(files, *file)
 	}
 	for _, folderID1 := range level.FoldersID {
 		folder := new(schema.Folder)
 		_, err := r.next.Read(ctx, folderID1, folder)
-		if err != nil {
-			return nil, fmt.Errorf("failed to read file info %s: %v", folderID1, err.Error())
+		if err == nil {
+			folders = append(folders, *folder)
 		}
-		folders = append(folders, *folder)
 	}
 
 	return &schema.FSLevelDetailed{RootID: folderID, Folders: folders, Files: files}, nil
@@ -333,12 +334,12 @@ func (r *Repository) GetFolderContent(ctx context.Context, userID, folderID stri
 func (r *Repository) UpdateFileContent(ctx context.Context, userID string, fileID string, content []byte) (uint, error) {
 	file := new(schema.File)
 	r.mux.RLock()
-	if _, err := r.next.Read(ctx, fileID, &file); err != nil {
+	if _, err := r.next.Read(ctx, fileID, file); err != nil {
 		r.mux.RUnlock()
 		return 0, err
 	}
 	c := new(schema.Content)
-	cas, err := r.next.Read(ctx, file.ContentID, &c)
+	cas, err := r.next.Read(ctx, file.ContentID, c)
 	if err != nil {
 		r.mux.RUnlock()
 		return 0, err
@@ -358,14 +359,14 @@ func (r *Repository) DeleteFile(ctx context.Context, userID string, fileID strin
 	file := new(schema.File)
 	r.mux.RLock()
 	var fcas uint
-	fcas, err := r.next.Read(ctx, fileID, &file)
+	fcas, err := r.next.Read(ctx, fileID, file)
 	if err != nil {
 		r.mux.RUnlock()
 		return err
 	}
 	c := new(schema.Content)
 	var ccas uint
-	ccas, err = r.next.Read(ctx, file.ContentID, &c)
+	ccas, err = r.next.Read(ctx, file.ContentID, c)
 	if err != nil {
 		r.mux.RUnlock()
 		return err
@@ -388,14 +389,14 @@ func (r *Repository) DeleteFile(ctx context.Context, userID string, fileID strin
 
 func (r *Repository) DownloadFile(ctx context.Context, userID, fileID string) (*schema.File, *schema.Content, error) {
 	file := new(schema.File)
-	_, err := r.next.Read(ctx, fileID, &file)
+	_, err := r.next.Read(ctx, fileID, file)
 	if err != nil {
 		return nil, nil, fmt.Errorf("failed to read File %s: %v", fileID, err.Error())
 	}
 	contentID := file.ContentID
 	content := new(schema.Content)
 
-	_, err = r.next.Read(ctx, contentID, &content)
+	_, err = r.next.Read(ctx, contentID, content)
 	if err != nil {
 		return nil, nil, fmt.Errorf("failed to read content %s: %v", contentID, err.Error())
 	}
@@ -405,7 +406,7 @@ func (r *Repository) DownloadFile(ctx context.Context, userID, fileID string) (*
 func (r *Repository) RenameFile(ctx context.Context, userID, fileID, newName string) error {
 	file := new(schema.File)
 	r.mux.RLock()
-	cas, err := r.next.Read(ctx, fileID, &file)
+	cas, err := r.next.Read(ctx, fileID, file)
 	if err != nil {
 		r.mux.RUnlock()
 		return err

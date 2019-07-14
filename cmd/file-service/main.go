@@ -15,7 +15,6 @@ import (
 	"github.com/bitstored/file-service/pb"
 	"github.com/bitstored/file-service/pkg/server"
 	"github.com/bitstored/file-service/pkg/service"
-
 	"github.com/cenkalti/backoff"
 	grpc_prometheus "github.com/grpc-ecosystem/go-grpc-prometheus"
 	"github.com/prometheus/client_golang/prometheus"
@@ -92,7 +91,7 @@ func main() {
 	mux.Handle("/", gw)
 
 	httpServer := &http.Server{
-		Handler:      mux,
+		Handler:      allowCORS(mux),
 		Addr:         *httpAddr,
 		WriteTimeout: 30 * time.Second,
 		ReadTimeout:  30 * time.Second,

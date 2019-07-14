@@ -37,9 +37,11 @@ func (c CreateNewFolder) IsValid() bool {
 }
 
 type UpdateFileContent struct {
-	UserID string
-	FileID string
-	Data   []byte
+	UserID         string
+	FileID         string
+	Data           []byte
+	InitialSize    int64
+	CompressedSize int64
 }
 
 func (c UpdateFileContent) IsValid() bool {
@@ -78,14 +80,16 @@ func (c MoveFile) IsValid() bool {
 }
 
 type UploadFile struct {
-	UserID       string
-	ParentID     string
-	CreationDate string
-	Name         string
-	FileType     string
-	Writable     bool
-	Private      bool
-	Content      []byte
+	UserID         string
+	ParentID       string
+	CreationDate   string
+	Name           string
+	FileType       string
+	Writable       bool
+	Private        bool
+	Content        []byte
+	InitialSize    int64
+	CompressedSize int64
 }
 
 func (c UploadFile) IsValid() bool {
