@@ -21,7 +21,7 @@ import (
 const (
 	CRYPTO_GRPC_PORT       = "localhost:4004"
 	COMPRESSION_GRPC_PORT  = "localhost:4003"
-	WATERMARKING_GRPC_PORT = "localhost:4008"
+	WATERMARKING_GRPC_PORT = "localhost:4009"
 )
 
 type Service struct {
@@ -51,19 +51,17 @@ func (s *Service) CreateDrive(ctx context.Context, userID string) (string, error
 }
 
 // CreateNewFile creates a file associated with user and containing the following data, returns the file ID
-func (s *Service) CreateNewFile(ctx context.Context, userID, fileName, parentID, fileType string, writable, private bool, content, secretKey []byte) (string, error) {
+func (s *Service) CreateNewFile(ctx context.Context, userID, fileName, parentID, fileType string, writable, private bool, content []byte, secretKey string) (string, error) {
 	//compress file according to file type
 	compressed, err := s.compress(ctx, fileType, content)
 	if err != nil {
 		return "", err
 	}
-	encrypted := compressed
-	fmt.Printf("in : %v\n\n\n", content)
 	// // if file is private, encrypt file content
-	// encrypted, err := s.encrypt(ctx, compressed, secretKey, userID)
-	// if err != nil {
-	// 	return "", err
-	// }
+	encrypted, err := s.encrypt(ctx, compressed, []byte(secretKey), userID)
+	if err != nil {
+		return "", err
+	}
 	command := new(commands.CreateNewFile)
 	command.UserID = userID
 	command.ParentID = parentID
@@ -98,7 +96,7 @@ func (s *Service) CreateNewFolder(ctx context.Context, userID, folderName, paren
 	return event.FolderID, nil
 }
 
-func (s *Service) UpdateFileContent(ctx context.Context, userID, fileID string, fileType pb.Type, secretKey, content []byte) error {
+func (s *Service) UpdateFileContent(ctx context.Context, userID, fileID string, fileType pb.Type, secretKey string, content []byte) error {
 	command := new(commands.UpdateFileContent)
 	command.UserID = userID
 
@@ -117,12 +115,11 @@ func (s *Service) UpdateFileContent(ctx context.Context, userID, fileID string, 
 	if err != nil {
 		return err
 	}
-	encrypted := compressed
 	// if file is private, encrypt file content
-	// encrypted, err := s.encrypt(ctx, compressed, secretKey, userID)
-	// if err != nil {
-	// 	return err
-	// }
+	encrypted, err := s.encrypt(ctx, compressed, []byte(secretKey), userID)
+	if err != nil {
+		return err
+	}
 	command.FileID = fileID
 	command.Data = encrypted
 	command.InitialSize = int64(len(content))
@@ -162,23 +159,26 @@ func (s *Service) MoveFile(ctx context.Context, userID, fileID, sourceID, destin
 	return event.Error
 }
 
-func (s *Service) UploadFile(ctx context.Context, userID, fileName, parentID, fileType string, writable, private bool, content, secretKey []byte) (string, []byte, error) {
+func (s *Service) UploadFile(ctx context.Context, userID, fileName, parentID, fileType string, writable, private bool, content []byte, secretKey string) (string, string, error) {
+
+	msg, err := s.decodeMessage(ctx, content)
+	fmt.Printf("Message: %v\n", msg)
+	if err != nil {
+		fmt.Printf("%v\n", err)
+		msg = []byte{}
+	}
 
 	//compress file according to file type
 	compressed, err := s.compress(ctx, fileType, content)
 	if err != nil {
-		return "", nil, err
+		return "", "", err
 	}
-	msg, err := s.decodeMessage(ctx, content)
+
+	//if file is private, encrypt file content
+	encrypted, err := s.encrypt(ctx, compressed, []byte(secretKey), userID)
 	if err != nil {
-		msg = []byte{}
+		return "", "", err
 	}
-	encrypted := compressed
-	// if file is private, encrypt file content
-	// encrypted, err := s.encrypt(ctx, compressed, secretKey, userID)
-	// if err != nil {
-	// 	return "", nil, err
-	// }
 
 	command := new(commands.UploadFile)
 	command.UserID = userID
@@ -194,13 +194,12 @@ func (s *Service) UploadFile(ctx context.Context, userID, fileName, parentID, fi
 	event := s.LaunchCommand(ctx, command).(*events.FileUploaded)
 
 	if event.Error != nil {
-		return "", nil, event.Error
+		return "", "", event.Error
 	}
-
-	return event.FileID, msg, nil
+	return event.FileID, string(msg), nil
 }
 
-func (s *Service) DownloadFile(ctx context.Context, userID, fileID string, secretKey []byte, watermarkingPhrase string, steganographyPhrase []byte, watermarkingImage []byte) (*pb.File, error) {
+func (s *Service) DownloadFile(ctx context.Context, userID, fileID string, secretKey string, watermarkingPhrase string, steganographyPhrase string, watermarkingImage string) (*pb.File, error) {
 	command := new(commands.DownloadFile)
 	command.UserID = userID
 	command.FileID = fileID
@@ -208,16 +207,16 @@ func (s *Service) DownloadFile(ctx context.Context, userID, fileID string, secre
 	if event.Error != nil {
 		return nil, event.Error
 	}
+	content, err := s.decrypt(ctx, event.Content, []byte(secretKey), userID)
+	if err != nil {
+		return nil, fmt.Errorf("Could not decrypt the content")
+	}
 
-	//content, err := s.decrypt(ctx, event.Content, secretKey, userID)
-	// if err != nil {
-	// 	return nil, fmt.Errorf("Could not decrypt the content")
-	// }
-	content := event.Content
-	content, err := s.decompress(ctx, event.FileType, content)
+	content, err = s.decompress(ctx, event.FileType, content)
 	if err != nil {
 		return nil, err //fmt.Errorf("Could not decompress the content")
 	}
+
 	file := new(pb.File)
 	file.Name = event.Name
 	file.CreationDate = event.CreationDate
@@ -231,30 +230,35 @@ func (s *Service) DownloadFile(ctx context.Context, userID, fileID string, secre
 	}
 	if event.Writable && event.FileType == "PNG" {
 
-		if watermarkingImage != nil {
-			content, err = s.watermarkWithImage(ctx, content, watermarkingImage)
+		if watermarkingImage != "" {
+			content, err = s.watermarkWithImage(ctx, content, []byte(watermarkingImage))
 		}
 		if watermarkingPhrase != "" {
 			content, err = s.watermarkWithText(ctx, content, watermarkingPhrase)
+			if err != nil {
+				fmt.Println(err.Error())
+			} else {
+				fmt.Println(watermarkingPhrase)
+			}
 		}
 	}
-	if event.Private && event.FileType == "PNG" {
-		content, err = s.encodeMessage(ctx, content, steganographyPhrase)
+	if event.Private && event.FileType == "PNG" && len(steganographyPhrase) != 0 {
+		content, err = s.encodeMessage(ctx, content, []byte(steganographyPhrase))
 	}
-	file.Content = content
+	file.Content = string(content)
 	return file, nil
 }
 
-func (s *Service) GetFileContent(ctx context.Context, userID, fileID string, fileType pb.Type, secretKey []byte) (*pb.File, error) {
+func (s *Service) GetFileContent(ctx context.Context, userID, fileID string, fileType pb.Type, secretKey string) (*pb.File, error) {
 	cont, err := s.Repo.GetFileContent(ctx, userID, fileID)
 	if err != nil {
 		return nil, fmt.Errorf("Could not find the file")
 	}
 	content := cont.Data
-	// content, err = s.decrypt(ctx, content, secretKey, userID)
-	// if err != nil {
-	// 	return nil, fmt.Errorf("Could not decrypt the content")
-	// }
+	content, err = s.decrypt(ctx, content, []byte(secretKey), userID)
+	if err != nil {
+		return nil, fmt.Errorf("Could not decrypt the content")
+	}
 	var fType string
 	if fileType == pb.Type_IMAGE {
 		fType = "PNG"
@@ -269,7 +273,7 @@ func (s *Service) GetFileContent(ctx context.Context, userID, fileID string, fil
 	}
 
 	file := new(pb.File)
-	file.Content = content
+	file.Content = string(content)
 	file.FileType = pb.Type_OTHER
 
 	return file, nil
@@ -281,7 +285,6 @@ func (s *Service) GetFolderContent(ctx context.Context, userID, folderID string)
 		return nil, err
 	}
 	fsLevel := new(pb.FSLevel)
-	fmt.Printf("\n\n%v\n\n", fsLevel)
 
 	fsLevel.Files = make([]*pb.File, 0)
 	fsLevel.Folders = make([]*pb.Folder, 0)
@@ -299,7 +302,7 @@ func (s *Service) GetFolderContent(ctx context.Context, userID, folderID string)
 		fp.CreationDate = fr.Created
 		fp.Identifier = fr.ID
 		fp.Name = fr.Name
-		fp.Content = []byte("unknown")
+		fp.Content = "unknown"
 		if fr.Type == "PNG" {
 			fp.FileType = pb.Type_IMAGE
 		} else if fr.Type == "PDF" {
@@ -347,7 +350,9 @@ func (s *Service) encodeMessage(ctx context.Context, target []byte, message []by
 	return rsp.Image, nil
 }
 
-func (s *Service) decodeMessage(ctx context.Context, target []byte) ([]byte, error) {
+func (s *Service) decodeMessage(ctx context.Context, source []byte) ([]byte, error) {
+	target := make([]byte, len(source))
+	copy(target, source)
 	conn, err := grpc.Dial(WATERMARKING_GRPC_PORT, grpc.WithInsecure())
 	defer conn.Close()
 	if err != nil {
@@ -368,13 +373,13 @@ func (s *Service) watermarkWithImage(ctx context.Context, target []byte, data []
 	conn, err := grpc.Dial(WATERMARKING_GRPC_PORT, grpc.WithInsecure())
 	defer conn.Close()
 	if err != nil {
-		return nil, err
+		return target, err
 	}
 	client := watpb.NewWatermarkingClient(conn)
 	req := watpb.WatermarkImageWithImageRequest{target, data}
 	rsp, err := client.WatermarkImageWithImage(ctx, &req)
 	if err != nil {
-		return nil, err
+		return target, err
 	}
 	return rsp.Image, nil
 }
@@ -383,13 +388,14 @@ func (s *Service) watermarkWithText(ctx context.Context, target []byte, data str
 	conn, err := grpc.Dial(WATERMARKING_GRPC_PORT, grpc.WithInsecure())
 	defer conn.Close()
 	if err != nil {
-		return nil, err
+		return target, err
 	}
 	client := watpb.NewWatermarkingClient(conn)
+
 	req := watpb.WatermarkImageWithTextRequest{target, data}
 	rsp, err := client.WatermarkImageWithText(ctx, &req)
 	if err != nil {
-		return nil, err
+		return target, err
 	}
 	return rsp.Image, nil
 }
@@ -494,9 +500,9 @@ func (s *Service) encrypt(ctx context.Context, data []byte, secretKey []byte, us
 	output := make([]byte, 0)
 	slices := len(data) / 16
 	for i := 0; i < slices; i++ {
-		slice := data[i : i+16]
+		slice := data[i*16 : i*16+16]
 		file := &crypb.File{Content: slice, SecretPhrase: secretKey}
-		req := &crypb.EncryptFileRequest{OriginalFile: file, UserId: userID}
+		req := &crypb.EncryptFileRequest{OriginalFile: file}
 		resp, err := client.EncryptFile(ctx, req)
 		if err != nil {
 			return nil, err
@@ -519,9 +525,9 @@ func (s *Service) decrypt(ctx context.Context, data []byte, secretKey []byte, us
 	slices := len(data) / 16
 
 	for i := 0; i < slices; i++ {
-		slice := data[i : i+16]
+		slice := data[i*16 : i*16+16]
 		file := &crypb.File{Content: slice, SecretPhrase: secretKey}
-		req := &crypb.DecryptFileRequest{EncryptedFile: file, SecretPhrase: secretKey}
+		req := &crypb.DecryptFileRequest{EncryptedFile: file}
 
 		resp, err := client.DecryptFile(ctx, req)
 		if err != nil {

@@ -87,7 +87,10 @@ func request_FileManagement_GetFolderContent_0(ctx context.Context, marshaler ru
 	var protoReq GetFolderContentRequest
 	var metadata runtime.ServerMetadata
 
-	if err := runtime.PopulateQueryParameters(&protoReq, req.URL.Query(), filter_FileManagement_GetFolderContent_0); err != nil {
+	if err := req.ParseForm(); err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
+	}
+	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_FileManagement_GetFolderContent_0); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 
@@ -104,7 +107,10 @@ func request_FileManagement_GetFileContent_0(ctx context.Context, marshaler runt
 	var protoReq GetFileContentRequest
 	var metadata runtime.ServerMetadata
 
-	if err := runtime.PopulateQueryParameters(&protoReq, req.URL.Query(), filter_FileManagement_GetFileContent_0); err != nil {
+	if err := req.ParseForm(); err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
+	}
+	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_FileManagement_GetFileContent_0); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 
@@ -121,7 +127,10 @@ func request_FileManagement_GetFileTree_0(ctx context.Context, marshaler runtime
 	var protoReq GetFileTreeRequest
 	var metadata runtime.ServerMetadata
 
-	if err := runtime.PopulateQueryParameters(&protoReq, req.URL.Query(), filter_FileManagement_GetFileTree_0); err != nil {
+	if err := req.ParseForm(); err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
+	}
+	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_FileManagement_GetFileTree_0); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 
@@ -257,7 +266,10 @@ func request_FileManagement_ComputeSize_0(ctx context.Context, marshaler runtime
 	var protoReq ComputeSizeRequest
 	var metadata runtime.ServerMetadata
 
-	if err := runtime.PopulateQueryParameters(&protoReq, req.URL.Query(), filter_FileManagement_ComputeSize_0); err != nil {
+	if err := req.ParseForm(); err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
+	}
+	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_FileManagement_ComputeSize_0); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 
@@ -625,35 +637,35 @@ func RegisterFileManagementHandlerClient(ctx context.Context, mux *runtime.Serve
 }
 
 var (
-	pattern_FileManagement_CreateDrive_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4}, []string{"files", "api", "v1", "drive", "create"}, ""))
+	pattern_FileManagement_CreateDrive_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4}, []string{"files", "api", "v1", "drive", "create"}, "", runtime.AssumeColonVerbOpt(true)))
 
-	pattern_FileManagement_CreateNewFile_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4}, []string{"files", "api", "v1", "file", "create"}, ""))
+	pattern_FileManagement_CreateNewFile_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4}, []string{"files", "api", "v1", "file", "create"}, "", runtime.AssumeColonVerbOpt(true)))
 
-	pattern_FileManagement_CreateNewFolder_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4}, []string{"files", "api", "v1", "folder", "create"}, ""))
+	pattern_FileManagement_CreateNewFolder_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4}, []string{"files", "api", "v1", "folder", "create"}, "", runtime.AssumeColonVerbOpt(true)))
 
-	pattern_FileManagement_GetFolderContent_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4}, []string{"files", "api", "v1", "folder", "content"}, ""))
+	pattern_FileManagement_GetFolderContent_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4}, []string{"files", "api", "v1", "folder", "content"}, "", runtime.AssumeColonVerbOpt(true)))
 
-	pattern_FileManagement_GetFileContent_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4}, []string{"files", "api", "v1", "file", "content"}, ""))
+	pattern_FileManagement_GetFileContent_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4}, []string{"files", "api", "v1", "file", "content"}, "", runtime.AssumeColonVerbOpt(true)))
 
-	pattern_FileManagement_GetFileTree_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4}, []string{"files", "api", "v1", "drive", "tree"}, ""))
+	pattern_FileManagement_GetFileTree_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4}, []string{"files", "api", "v1", "drive", "tree"}, "", runtime.AssumeColonVerbOpt(true)))
 
-	pattern_FileManagement_UpdateFileContent_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4}, []string{"files", "api", "v1", "file", "update"}, ""))
+	pattern_FileManagement_UpdateFileContent_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4}, []string{"files", "api", "v1", "file", "update"}, "", runtime.AssumeColonVerbOpt(true)))
 
-	pattern_FileManagement_DeleteFile_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4}, []string{"files", "api", "v1", "file", "delete"}, ""))
+	pattern_FileManagement_DeleteFile_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4}, []string{"files", "api", "v1", "file", "delete"}, "", runtime.AssumeColonVerbOpt(true)))
 
-	pattern_FileManagement_RenameFile_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4}, []string{"files", "api", "v1", "file", "rename"}, ""))
+	pattern_FileManagement_RenameFile_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4}, []string{"files", "api", "v1", "file", "rename"}, "", runtime.AssumeColonVerbOpt(true)))
 
-	pattern_FileManagement_MoveFile_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4}, []string{"files", "api", "v1", "file", "move"}, ""))
+	pattern_FileManagement_MoveFile_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4}, []string{"files", "api", "v1", "file", "move"}, "", runtime.AssumeColonVerbOpt(true)))
 
-	pattern_FileManagement_UploadFile_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4}, []string{"files", "api", "v1", "file", "upload"}, ""))
+	pattern_FileManagement_UploadFile_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4}, []string{"files", "api", "v1", "file", "upload"}, "", runtime.AssumeColonVerbOpt(true)))
 
-	pattern_FileManagement_ShareFile_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4}, []string{"files", "api", "v1", "file", "share"}, ""))
+	pattern_FileManagement_ShareFile_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4}, []string{"files", "api", "v1", "file", "share"}, "", runtime.AssumeColonVerbOpt(true)))
 
-	pattern_FileManagement_DownloadFile_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4}, []string{"files", "api", "v1", "file", "download"}, ""))
+	pattern_FileManagement_DownloadFile_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4}, []string{"files", "api", "v1", "file", "download"}, "", runtime.AssumeColonVerbOpt(true)))
 
-	pattern_FileManagement_ComputeSize_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4}, []string{"files", "api", "v1", "file", "size"}, ""))
+	pattern_FileManagement_ComputeSize_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4}, []string{"files", "api", "v1", "file", "size"}, "", runtime.AssumeColonVerbOpt(true)))
 
-	pattern_FileManagement_GetMyDriveId_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4}, []string{"files", "api", "v1", "drive", "id"}, ""))
+	pattern_FileManagement_GetMyDriveId_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4}, []string{"files", "api", "v1", "drive", "id"}, "", runtime.AssumeColonVerbOpt(true)))
 )
 
 var (

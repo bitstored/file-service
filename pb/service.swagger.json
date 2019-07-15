@@ -125,8 +125,7 @@
             "name": "secret_key",
             "in": "query",
             "required": false,
-            "type": "string",
-            "format": "byte"
+            "type": "string"
           },
           {
             "name": "type",
@@ -481,8 +480,7 @@
           "$ref": "#/definitions/file_serviceFile"
         },
         "secret_phrase": {
-          "type": "string",
-          "format": "byte"
+          "type": "string"
         },
         "user_id": {
           "type": "string"
@@ -563,19 +561,16 @@
           "type": "string"
         },
         "secret_phrase": {
-          "type": "string",
-          "format": "byte"
+          "type": "string"
         },
         "watermark_image": {
-          "type": "string",
-          "format": "byte"
+          "type": "string"
         },
         "watermark_message": {
           "type": "string"
         },
         "stegano_message": {
-          "type": "string",
-          "format": "byte"
+          "type": "string"
         }
       }
     },
@@ -592,8 +587,7 @@
           "$ref": "#/definitions/file_serviceFile"
         },
         "content": {
-          "type": "string",
-          "format": "byte"
+          "type": "string"
         }
       }
     },
@@ -664,8 +658,7 @@
           "format": "boolean"
         },
         "content": {
-          "type": "string",
-          "format": "byte"
+          "type": "string"
         },
         "init_size": {
           "type": "string",
@@ -853,8 +846,7 @@
           "type": "string"
         },
         "new_content": {
-          "type": "string",
-          "format": "byte"
+          "type": "string"
         },
         "user_id": {
           "type": "string"
@@ -863,8 +855,7 @@
           "$ref": "#/definitions/file_serviceType"
         },
         "secret_key": {
-          "type": "string",
-          "format": "byte"
+          "type": "string"
         }
       }
     },
@@ -889,12 +880,10 @@
           "type": "string"
         },
         "secret_phrase": {
-          "type": "string",
-          "format": "byte"
+          "type": "string"
         },
         "encoded_phrase": {
-          "type": "string",
-          "format": "byte"
+          "type": "string"
         }
       }
     },
@@ -911,8 +900,7 @@
           "type": "string"
         },
         "watermark_message": {
-          "type": "string",
-          "format": "byte"
+          "type": "string"
         }
       }
     }

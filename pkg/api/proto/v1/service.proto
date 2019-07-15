@@ -91,7 +91,6 @@ service FileManagement {
             body: "*"
         };
 	} 
-		// TODO add methods for shared files
 }
 message GetMyDriveIdRequest {
     string user_id = 1;
@@ -138,7 +137,7 @@ message File {
     Type file_type = 6;
     bool writable = 7;
     bool private = 8; // should be watermarked 
-    bytes content = 9;
+    string content = 9;
     int64 init_size = 10;
     int64 compressed_size = 11;
 }
@@ -153,18 +152,18 @@ message CreateDriveResponse {
 message UploadFileRequest {
     File file = 1;
     string user_id = 4;
-	bytes secret_phrase = 2;
-	bytes encoded_phrase = 3;
+    string secret_phrase = 2;
+    string encoded_phrase = 3;
 }
 message UploadFileResponse {
-    string response_code = 1;
+  string response_code = 1;
 	string response_message = 2;
 	string file_id = 3;
-    bytes watermark_message = 4;
+  string watermark_message = 4;
 }
 message CreateNewFileRequest {
     File file = 1;
-    bytes secret_phrase = 2;
+    string secret_phrase = 2;
     string user_id = 3;
 }
 message CreateNewFileResponse {
@@ -221,7 +220,7 @@ message GetFolderContentResponse {
 message GetFileContentRequest {
     string identifier = 1;
     string user_id = 2;
-    bytes secret_key = 3;
+    string secret_key = 3;
     Type type = 4;
 }
 message GetFileContentResponse {
@@ -240,10 +239,10 @@ message GetFileTreeResponse {
 }
 message UpdateFileContentRequest {
     string identifier = 1;
-    bytes new_content = 2;
+    string new_content = 2;
     string user_id = 3;
     Type file_type = 4;
-    bytes secret_key = 5;
+    string secret_key = 5;
 }
 message UpdateFileContentResponse {
     string response_code = 1;
@@ -261,15 +260,15 @@ message DownloadFileRequest {
     string identifier = 1;
     string user_id = 2;
     string source_id = 3;
-    bytes secret_phrase = 4;
-    bytes watermark_image = 5;
+    string secret_phrase = 4;
+    string watermark_image = 5;
     string watermark_message = 6;
-    bytes stegano_message =7;
+    string stegano_message =7;
 }
 message DownloadFileResponse {
     string response_code = 1;
     string response_message = 2;
     File file = 3;
-    bytes content = 4;
+    string content = 4;
 }
 

@@ -400,6 +400,7 @@ func (r *Repository) DownloadFile(ctx context.Context, userID, fileID string) (*
 	if err != nil {
 		return nil, nil, fmt.Errorf("failed to read content %s: %v", contentID, err.Error())
 	}
+
 	return file, content, nil
 }
 

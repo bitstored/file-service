@@ -55,8 +55,8 @@ func (s *Server) CreateNewFolder(ctx context.Context, in *pb.CreateNewFolderRequ
 
 func (s *Server) CreateNewFile(ctx context.Context, in *pb.CreateNewFileRequest) (*pb.CreateNewFileResponse, error) {
 	file := in.File
-	if file.Content == nil {
-		return nil, status.Error(codes.InvalidArgument, "File content can't be nil")
+	if file.Content == "" {
+		return nil, status.Error(codes.InvalidArgument, "File content can't be empty")
 	}
 
 	var name string
@@ -79,7 +79,7 @@ func (s *Server) CreateNewFile(ctx context.Context, in *pb.CreateNewFileRequest)
 		Type = "TXT"
 	}
 
-	identifier, err := s.Service.CreateNewFile(ctx, in.GetUserId(), name, file.GetParentIdentifier(), Type, file.Writable, file.Private, file.Content, in.SecretPhrase)
+	identifier, err := s.Service.CreateNewFile(ctx, in.GetUserId(), name, file.GetParentIdentifier(), Type, file.Writable, file.Private, []byte(file.Content), in.SecretPhrase)
 	if err != nil {
 		return nil, status.Error(codes.Internal, err.Error())
 	}
@@ -158,7 +158,7 @@ func (s *Server) UpdateFileContent(ctx context.Context, in *pb.UpdateFileContent
 		return nil, status.Error(codes.InvalidArgument, "FileID can't be empty")
 	}
 
-	err := s.Service.UpdateFileContent(ctx, uid, fid, in.GetFileType(), in.GetSecretKey(), in.GetNewContent())
+	err := s.Service.UpdateFileContent(ctx, uid, fid, in.GetFileType(), in.GetSecretKey(), []byte(in.GetNewContent()))
 	if err != nil {
 		return nil, status.Error(codes.Internal, err.Error())
 	}
@@ -254,8 +254,8 @@ func (s *Server) MoveFile(ctx context.Context, in *pb.MoveFileRequest) (*pb.Move
 
 func (s *Server) UploadFile(ctx context.Context, in *pb.UploadFileRequest) (*pb.UploadFileResponse, error) {
 	file := in.File
-	if file.Content == nil {
-		return nil, status.Error(codes.InvalidArgument, "File content can't be nil")
+	if file.Content == "" {
+		return nil, status.Error(codes.InvalidArgument, "File content can't be empty")
 	}
 	var uid string
 	uid = strings.Trim(in.GetUserId(), " ")
@@ -286,7 +286,7 @@ func (s *Server) UploadFile(ctx context.Context, in *pb.UploadFileRequest) (*pb.
 		Type = "TXT"
 	}
 
-	identifier, message, err := s.Service.UploadFile(ctx, uid, name, did, Type, file.Writable, file.Private, file.Content, in.SecretPhrase)
+	identifier, message, err := s.Service.UploadFile(ctx, uid, name, did, Type, file.Writable, file.Private, []byte(file.Content), in.SecretPhrase)
 	if err != nil {
 		return nil, status.Error(codes.Internal, err.Error())
 	}
@@ -308,6 +308,7 @@ func (s *Server) ShareFile(ctx context.Context, in *pb.ShareFileRequest) (*pb.Sh
 
 func (s *Server) DownloadFile(ctx context.Context, in *pb.DownloadFileRequest) (*pb.DownloadFileResponse, error) {
 	var uid string
+	fmt.Printf("SP: %v\n", in.GetSecretPhrase())
 	uid = strings.Trim(in.GetUserId(), " ")
 	if uid == "" {
 		return nil, status.Error(codes.InvalidArgument, "UserID can't be empty")
@@ -320,11 +321,11 @@ func (s *Server) DownloadFile(ctx context.Context, in *pb.DownloadFileRequest) (
 	if len(in.GetSecretPhrase()) == 0 {
 		return nil, status.Error(codes.InvalidArgument, "Secret phrase can't be empty")
 	}
-	var steganoMessage []byte = nil
+	var steganoMessage string
 	if len(in.GetSteganoMessage()) != 0 {
 		steganoMessage = in.GetSteganoMessage()
 	}
-	var watermarkImage []byte = nil
+	var watermarkImage string
 	if len(in.GetWatermarkImage()) != 0 {
 		watermarkImage = in.GetWatermarkImage()
 	}
@@ -336,8 +337,6 @@ func (s *Server) DownloadFile(ctx context.Context, in *pb.DownloadFileRequest) (
 	if err != nil {
 		return nil, status.Error(codes.Internal, err.Error())
 	}
-	fmt.Printf("%v\n\n", file)
-
 	rsp := new(pb.DownloadFileResponse)
 	rsp.File = file
 	rsp.ResponseCode = codes.OK.String()
